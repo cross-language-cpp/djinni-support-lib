@@ -39,11 +39,6 @@ set_target_properties(djinni_support_lib PROPERTIES
   CXX_EXTENSIONS false
 )
 
-target_include_directories(djinni_support_lib PUBLIC
- # $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni>
-  #$<INSTALL_INTERFACE:include/djinni>  # TODO, needs extra test, and what about Windows
-)
-
 
 install(
   TARGETS djinni_support_lib
