@@ -1,0 +1,14 @@
+name: build-all-configs
+on: [push]
+jobs:
+  build-on-osx-for-osx:
+    runs-on: macOS Catalina 10.15
+    steps:
+    - id: configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G XCode
+    - id: build
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
+    - id: install
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release --target install -- DESTDIR=zinstall_root
+    - id: list installed files
+      run: cd zinstall_root && du -a | tail -r
