@@ -5,7 +5,7 @@ jobs:
     runs-on: macos-10.15
     steps:
     - id: configure-cmake
-      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G XCode
+      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G Xcode
     - id: build-release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - id: install-files
