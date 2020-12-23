@@ -2,7 +2,7 @@ name: build-all-configs
 on: [push]
 jobs:
   build-on-osx-for-osx:
-    runs-on: macOS Catalina 10.15
+    runs-on: macos-10.15
     steps:
     - id: configure-cmake
       run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G XCode
