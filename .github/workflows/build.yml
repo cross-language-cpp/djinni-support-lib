@@ -10,6 +10,8 @@ jobs:
     - id: build-release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - id: install-files
-      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release --target install -- DESTDIR=$(pwd)/zinstall_root
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release --target install -- DESTDIR=zinstall_root
     - id: list-installed-files
-      run: cd $(pwd)/zinstall_root && du -a | tail -r
+      run: cd build/zinstall_root && du -a | tail -r | | awk -F ' ' '{print $2}'
+    - id: test-file-list
+      run: cd build/zinstall_root && diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
