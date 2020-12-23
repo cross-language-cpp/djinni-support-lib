@@ -12,5 +12,4 @@
 ./usr/local/include/djinni/objc/DJIError.h
 ./usr/local/include/djinni/objc/DJICppWrapperCache+Private.h
 ./usr/local/include/djinni/proxy_cache_impl.hpp
-./usr/local/include/djinni/proxy_cache_interface.hpp``
-a
+./usr/local/include/djinni/proxy_cache_interface.hpp
