@@ -1,0 +1,17 @@
+name: build-all-configs
+on: [push]
+jobs:
+  build-on-osx-for-osx:
+    runs-on: macos-10.15
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G Xcode
+    - name: Build release
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
+    - name: Install files
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release --target install -- DESTDIR=check_install_root
+    - name: List installed files
+      run: cd build/check_install_root && du -a | tail -r | awk -F ' ' '{print $2}'
+    - name: Test if expected files have been installed
+      run: cd build/check_install_root && diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')

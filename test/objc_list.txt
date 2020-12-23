@@ -1,0 +1,15 @@
+.
+./usr
+./usr/local
+./usr/local/lib
+./usr/local/lib/libdjinni_support_lib.a
+./usr/local/include
+./usr/local/include/djinni
+./usr/local/include/djinni/djinni_common.hpp
+./usr/local/include/djinni/objc
+./usr/local/include/djinni/objc/DJIMarshal+Private.h
+./usr/local/include/djinni/objc/DJIObjcWrapperCache+Private.h
+./usr/local/include/djinni/objc/DJIError.h
+./usr/local/include/djinni/objc/DJICppWrapperCache+Private.h
+./usr/local/include/djinni/proxy_cache_impl.hpp
+./usr/local/include/djinni/proxy_cache_interface.hpp
