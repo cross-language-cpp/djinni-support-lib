@@ -16,7 +16,6 @@ jobs:
     - name: Test if expected files have been installed
       run: cd build/check_install_root && diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
 
-jobs:
   build-on-ubunut-for-jni:
     runs-on: ubunut-latest
     steps:
