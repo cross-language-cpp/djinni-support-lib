@@ -108,6 +108,3 @@ endif()
 if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
   message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI must be enabled.")
 endif()
-
-# Store path to the "run" executable so it can be passed as argument to add_custom_command() scripts
-set(DJINNI_RUN_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/run" CACHE FILEPATH "Path to the Djinni generator executable.")
