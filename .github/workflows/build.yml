@@ -16,8 +16,8 @@ jobs:
     - name: Test if expected files have been installed
       run: cd build/check_install_root && diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
 
-  build-on-ubunut-for-jni:
-    runs-on: ubunut-latest
+  build-on-ubuntu-for-jni:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Configure cmake
