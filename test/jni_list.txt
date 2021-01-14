@@ -1,8 +1,6 @@
 .
 ./usr
 ./usr/local
-./usr/local/lib
-./usr/local/lib/libdjinni_support_lib.a
 ./usr/local/include
 ./usr/local/include/djinni
 ./usr/local/include/djinni/djinni_common.hpp
@@ -11,3 +9,18 @@
 ./usr/local/include/djinni/jni/Marshal.hpp
 ./usr/local/include/djinni/proxy_cache_impl.hpp
 ./usr/local/include/djinni/proxy_cache_interface.hpp
+./usr/local/lib
+./usr/local/lib/libdjinni_support_lib.a
+.
+./usr
+./usr/local
+./usr/local/include
+./usr/local/include/djinni
+./usr/local/include/djinni/djinni_common.hpp
+./usr/local/include/djinni/jni
+./usr/local/include/djinni/jni/djinni_support.hpp
+./usr/local/include/djinni/jni/Marshal.hpp
+./usr/local/include/djinni/proxy_cache_impl.hpp
+./usr/local/include/djinni/proxy_cache_interface.hpp
+./usr/local/lib
+./usr/local/lib/libdjinni_support_lib.a
