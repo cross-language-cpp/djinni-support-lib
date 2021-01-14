@@ -15,3 +15,18 @@ jobs:
       run: cd build/check_install_root && du -a | tail -r | awk -F ' ' '{print $2}'
     - name: Test if expected files have been installed
       run: cd build/check_install_root && diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
+
+  build-on-ubuntu-for-jni:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DDJINNI_STATIC_LIB=ON
+    - name: Build release
+      run: cmake --build build --parallel $(nproc) --config Release
+    - name: Install files
+      run: cmake --build build --parallel $(nproc) --config Release --target install -- DESTDIR=check_install_root
+    - name: List installed files
+      run: cd build/check_install_root && du -a | tac | awk -F ' ' '{print $2}' | sort
+    - name: Test if expected files have been installed
+      run: cd build/check_install_root && diff -u ../../test/jni_list.txt <(du -a | tac | awk -F ' ' '{print $2}' | sort)
