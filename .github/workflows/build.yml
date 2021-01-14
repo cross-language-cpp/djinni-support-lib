@@ -29,4 +29,4 @@ jobs:
     - name: List installed files
       run: cd build/check_install_root && du -a | tail -r | awk -F ' ' '{print $2}'
     - name: Test if expected files have been installed
-      run: cd build/check_install_root && diff -u ../../test/jni_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
+      run: cd build/check_install_root && diff -u ../../test/jni_list.txt <(du -a | tac | awk -F ' ' '{print $2}')
