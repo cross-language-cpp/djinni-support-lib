@@ -55,7 +55,7 @@ install(
 
 
 # Objective-C support
-option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." off)
+option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." OFF)
 if(DJINNI_WITH_OBJC)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/objc/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_OBJC})
@@ -81,7 +81,10 @@ if(DJINNI_WITH_OBJC)
 endif()
 
 # JNI support
-option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." off)
+option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." OFF)
+
+option (JNI_CPP_THREAD_ATTACH "Add code enableing calling from C++ thread to Java (experimatal)" OFF)
+
 if(DJINNI_WITH_JNI)
   if(NOT DJINNI_STATIC_LIB)
     list(APPEND SRC_JNI "djinni/jni/djinni_main.cpp")
@@ -89,6 +92,9 @@ if(DJINNI_WITH_JNI)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_JNI})
   source_group("jni" FILES ${SRC_JNI})
+  if (JNI_CPP_THREAD_ATTACH)
+    target_compile_definitions(djinni_support_lib PRIVATE EXPERIMENTAL_AUTO_CPP_THREAD_ATTACH)
+  endif()
 
   install(
     FILES
@@ -104,6 +110,11 @@ if(DJINNI_WITH_JNI)
     target_include_directories(djinni_support_lib PUBLIC "${JNI_INCLUDE_DIRS}")
   endif()
 endif()
+
+target_compile_options(djinni_support_lib PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror>
+)
 
 if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
   message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI must be enabled.")
