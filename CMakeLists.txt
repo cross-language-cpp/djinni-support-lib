@@ -83,7 +83,7 @@ endif()
 # JNI support
 option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." OFF)
 
-option (JNI_CPP_THREAD_ATTACH "Add code enableing calling from C++ thread to Java (experimatal)" OFF)
+option (JNI_CPP_THREAD_ATTACH "Add code enableing calling from C++ thread to Java (experimental)" OFF)
 
 if(DJINNI_WITH_JNI)
   if(NOT DJINNI_STATIC_LIB)
