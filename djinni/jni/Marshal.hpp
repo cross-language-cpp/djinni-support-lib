@@ -243,7 +243,15 @@ namespace djinni
 
         static LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c)
         {
-            assert(c.size() <= std::numeric_limits<jsize>::max());
+            // according to https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/types.html
+            //    `typedef jint jsize;`
+            // and
+            //    Java Type    Native Type     Description
+            //    int          jint            signed 32 bits
+            // therefore, casting numeric_limits<jsize>::max() to uint32_t
+            // would be valid and result in the same value, but now an
+            // unsigned type which can be compared to c.size()
+            assert(c.size() <= static_cast<uint32_t>(std::numeric_limits<jsize>::max()));
             auto j = LocalRef<jbyteArray>(jniEnv, jniEnv->NewByteArray(static_cast<jsize>(c.size())));
             jniExceptionCheck(jniEnv);
             // Using .data() on an empty vector is UB
@@ -371,7 +379,13 @@ namespace djinni
         static LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c)
         {
             const auto& data = JniClass<ListJniInfo>::get();
-            assert(c.size() <= std::numeric_limits<jint>::max());
+            // according to https://docs.oracle.com/javase/8/docs/technotes/guides/jni/spec/types.html
+            //    Java Type    Native Type     Description
+            //    int          jint            signed 32 bits
+            // therefore, casting numeric_limits<jint>::max() to uint32_t
+            // would be valid and result in the same value, but now an
+            // unsigned type which can be compared to c.size()
+            assert(c.size() <= static_cast<uint32_t>(std::numeric_limits<jint>::max()));
             auto size = static_cast<jint>(c.size());
             auto j = LocalRef<jobject>(jniEnv, jniEnv->NewObject(data.clazz.get(), data.constructor, size));
             jniExceptionCheck(jniEnv);
