@@ -243,7 +243,7 @@ namespace djinni
 
         static LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c)
         {
-            assert(c.size() <= std::numeric_limits<jsize>::max());
+            assert(c.size() <= static_cast<uint32_t>(std::numeric_limits<jsize>::max()));
             auto j = LocalRef<jbyteArray>(jniEnv, jniEnv->NewByteArray(static_cast<jsize>(c.size())));
             jniExceptionCheck(jniEnv);
             // Using .data() on an empty vector is UB
@@ -371,7 +371,7 @@ namespace djinni
         static LocalRef<JniType> fromCpp(JNIEnv* jniEnv, const CppType& c)
         {
             const auto& data = JniClass<ListJniInfo>::get();
-            assert(c.size() <= std::numeric_limits<jint>::max());
+            assert(c.size() <= static_cast<uint32_t>(std::numeric_limits<jint>::max()));
             auto size = static_cast<jint>(c.size());
             auto j = LocalRef<jobject>(jniEnv, jniEnv->NewObject(data.clazz.get(), data.constructor, size));
             jniExceptionCheck(jniEnv);
