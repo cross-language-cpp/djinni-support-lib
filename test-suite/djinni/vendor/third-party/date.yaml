@@ -27,6 +27,6 @@ java:
   readFromParcel: 'new %s(in.readLong())'
 jni:
   translator: '::djinni::Date'
-  header: '"Marshal.hpp"'
+  header: '"djinni/jni/Marshal.hpp"'
   typename: jobject
   typeSignature: 'Ljava/util/Date;'
