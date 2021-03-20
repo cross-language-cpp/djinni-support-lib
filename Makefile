@@ -6,6 +6,7 @@ clean:
 	@cd build && \
 	cmake --build . --target clean
 
+config: export JAVA_HOME=$(shell /usr/libexec/java_home)
 config:
 	@mkdir -p build && cd build && \
 	cmake \
