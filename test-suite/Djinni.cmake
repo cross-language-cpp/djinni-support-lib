@@ -50,17 +50,20 @@ macro(resolve_djinni_outputs)
   set(MULTI_VALUE COMMAND)
   cmake_parse_arguments(DJINNI "" "${SINGLE_VALUE}" "${MULTI_VALUE}" "${ARGN}")
 
-  set(DJINNI_OUTPUTS_TXT "${CMAKE_CURRENT_BINARY_DIR}/djinni_outputs.txt")
+  set(DJINNI_OUTPUTS_TXT "${CMAKE_CURRENT_BINARY_DIR}/${DJINNI_RESULT}.txt")
   execute_process(
     COMMAND ${DJINNI_COMMAND} "--skip-generation" "true" "--list-out-files" "${DJINNI_OUTPUTS_TXT}"
     RESULT_VARIABLE DJINNI_CONFIGURATION_RESULT
     ERROR_VARIABLE DJINNI_STDERR
-    OUTPUT_QUIET
+    # OUTPUT_QUIET
   )
   if(DJINNI_CONFIGURATION_RESULT)
     message(FATAL_ERROR ${DJINNI_STDERR})
   endif()
 
+  message(STATUS "Reading output file: ${DJINNI_OUTPUTS_TXT}")
+  file(READ ${DJINNI_OUTPUTS_TXT} FILE_CONTENTS)
+  message(STATUS "           contents: ${FILE_CONTENTS}")
   file(READ ${DJINNI_OUTPUTS_TXT} ${DJINNI_RESULT})
   string(REGEX REPLACE "\n" ";" ${DJINNI_RESULT} ${${DJINNI_RESULT}})
 endmacro()
@@ -287,6 +290,7 @@ function(add_djinni_target)
 
     resolve_djinni_outputs(COMMAND "${DJINNI_OBJC_GENERATION_COMMAND}" RESULT OBJC_OUT_FILES)
 
+    message(STATUS "Output: ${OBJC_OUT_FILES}")
     add_custom_command(
       OUTPUT ${OBJC_OUT_FILES}
       DEPENDS ${DJINNI_INPUTS}

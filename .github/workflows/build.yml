@@ -5,10 +5,13 @@ jobs:
     runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
+    - uses: asdf-vm/actions/install@v1
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G Xcode
     - name: Build release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
+    - name: Test
+      run: cd build/test-suite && ctest
     - name: Install files
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release --target install -- DESTDIR=check_install_root
     - name: List installed files
@@ -20,10 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: asdf-vm/actions/install@v1
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DDJINNI_STATIC_LIB=ON
     - name: Build release
       run: cmake --build build --parallel $(nproc) --config Release
+    - name: Test
+      run: cd build/test-suite && ctest
     - name: Install files
       run: cmake --build build --parallel $(nproc) --config Release --target install -- DESTDIR=check_install_root
     - name: List installed files
