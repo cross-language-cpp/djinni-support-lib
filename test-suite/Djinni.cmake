@@ -55,7 +55,7 @@ macro(resolve_djinni_outputs)
     COMMAND ${DJINNI_COMMAND} "--skip-generation" "true" "--list-out-files" "${DJINNI_OUTPUTS_TXT}"
     RESULT_VARIABLE DJINNI_CONFIGURATION_RESULT
     ERROR_VARIABLE DJINNI_STDERR
-    # OUTPUT_QUIET
+    OUTPUT_QUIET
   )
   if(DJINNI_CONFIGURATION_RESULT)
     message(FATAL_ERROR ${DJINNI_STDERR})
