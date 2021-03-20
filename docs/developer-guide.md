@@ -8,6 +8,7 @@
 
 ### Build dependencies
 
+- Djinni generator (compatible version specified in `.tool-versions`)
 - Java JDK 8 or 11
 
 ### Building
@@ -25,6 +26,9 @@ mkdir -p build && cd build
 cmake -DDJINNI_WITH_JNI=1 -DDJINNI_WITH_OBJC=1 ..
 cmake --build . --parallel
 ```
+
+A custom `djinni` executable can be specified with the CMake option
+`DJINNI_EXECUTABLE_PATH`.
 
 ### Running Tests
 
