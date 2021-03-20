@@ -109,5 +109,6 @@ if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
   message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI must be enabled.")
 endif()
 
+
 add_subdirectory(test-suite)
 

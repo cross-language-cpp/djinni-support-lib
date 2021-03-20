@@ -4,10 +4,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 enable_testing()
 
-file(GLOB_RECURSE CPP_HANDWRITTEN_SRCS "handwritten-src/cpp/*")
-file(GLOB_RECURSE JAVA_TEST_SRCS "handwritten-src/java/*")
-file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
-file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
 
 include(Djinni.cmake)
 
@@ -80,6 +76,12 @@ add_djinni_target(DjinniWCharTests
   OBJCPP_OUT_FILES  WCHAR_OBJCPP_GENERATED_SRCS
   YAML_OUT_FILE     WCHAR_YAML_GENERATED_SRCS
 )
+
+
+file(GLOB_RECURSE CPP_HANDWRITTEN_SRCS "handwritten-src/cpp/*")
+file(GLOB_RECURSE JAVA_TEST_SRCS "handwritten-src/java/*")
+file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
+file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})

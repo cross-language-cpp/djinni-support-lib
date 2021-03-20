@@ -11,7 +11,7 @@ jobs:
     - name: Build release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - name: Test
-      run: cd build/test-suite && ctest
+      run: cd build/test-suite && ctest -C Release -V
     - name: Install files
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release --target install -- DESTDIR=check_install_root
     - name: List installed files
@@ -29,7 +29,7 @@ jobs:
     - name: Build release
       run: cmake --build build --parallel $(nproc) --config Release
     - name: Test
-      run: cd build/test-suite && ctest
+      run: cd build/test-suite && ctest -C Release -V
     - name: Install files
       run: cmake --build build --parallel $(nproc) --config Release --target install -- DESTDIR=check_install_root
     - name: List installed files
