@@ -1,5 +1,5 @@
 name: build-all-configs
-on: [push]
+on: [push, pull_request]
 jobs:
   build-on-osx-for-osx:
     runs-on: macos-10.15
