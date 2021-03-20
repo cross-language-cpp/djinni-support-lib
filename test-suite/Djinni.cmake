@@ -61,9 +61,7 @@ macro(resolve_djinni_outputs)
     message(FATAL_ERROR ${DJINNI_STDERR})
   endif()
 
-  message(STATUS "Reading output file: ${DJINNI_OUTPUTS_TXT}")
   file(READ ${DJINNI_OUTPUTS_TXT} FILE_CONTENTS)
-  message(STATUS "           contents: ${FILE_CONTENTS}")
   file(READ ${DJINNI_OUTPUTS_TXT} ${DJINNI_RESULT})
   string(REGEX REPLACE "\n" ";" ${DJINNI_RESULT} ${${DJINNI_RESULT}})
 endmacro()
@@ -290,7 +288,6 @@ function(add_djinni_target)
 
     resolve_djinni_outputs(COMMAND "${DJINNI_OBJC_GENERATION_COMMAND}" RESULT OBJC_OUT_FILES)
 
-    message(STATUS "Output: ${OBJC_OUT_FILES}")
     add_custom_command(
       OUTPUT ${OBJC_OUT_FILES}
       DEPENDS ${DJINNI_INPUTS}
