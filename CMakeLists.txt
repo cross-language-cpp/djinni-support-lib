@@ -110,5 +110,7 @@ if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
 endif()
 
 
-add_subdirectory(test-suite)
-
+include(CTest)
+if (BUILD_TESTING)
+  add_subdirectory(test-suite)
+endif()
