@@ -77,11 +77,31 @@ add_djinni_target(DjinniWCharTests
   YAML_OUT_FILE     WCHAR_YAML_GENERATED_SRCS
 )
 
+add_djinni_target(DjinniPyTests
+  IDL "djinni/py_all.djinni"
+  PY_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
+  PYCFFI_PACKAGE_NAME "PyCFFIlib"
+  PYCFFI_DYNAMIC_LIB_LIST "mylib"
+  PYCFFI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cffi"
+  C_WRAPPER_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cwrapper"
+  CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp"
+  CPP_NAMESPACE "testsuite"
+  IDENT_CPP_ENUM_TYPE "foo_bar"
+  CPP_OPTIONAL_TEMPLATE "std::experimental::optional"
+  CPP_OPTIONAL_HEADER "\"test-suite/handwritten-src/cpp/optional.hpp\""
+
+  PY_OUT_FILES         PYTHON_GENERATED_SRCS
+  PYCFFI_OUT_FILES     PYCFFI_GENERATED_SRCS
+  C_WRAPPER_OUT_FILES  C_WRAPPER_GENERATED_SRCS
+  CPP_OUT_FILES        PYCPP_GENERATED_SRCS
+)
 
 file(GLOB_RECURSE CPP_HANDWRITTEN_SRCS "handwritten-src/cpp/*")
 file(GLOB_RECURSE JAVA_TEST_SRCS "handwritten-src/java/*")
 file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
 file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
+file(GLOB_RECURSE C_WRAPPER_TEST_SRCS "handwritten-src/cwrapper/*")
+file(GLOB_RECURSE PYCPP_TEST_SRCS "handwritten-src/pycpp/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})
@@ -179,4 +199,24 @@ if(DJINNI_WITH_OBJC)
   target_include_directories(DjinniObjcTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/objc/impl)
 
   xctest_add_test(XCTest.DjinniObjcTest DjinniObjcTestTests) 
+endif()
+
+
+if(DJINNI_WITH_PYTHON)
+  add_library(DjinniPyTestNative STATIC
+    ${C_WRAPPER_TEST_SRCS}
+    ${PYCPP_TEST_SRCS}
+    ${PYTHON_GENERATED_SRCS}
+    ${PYCFFI_GENERATED_SRCS}
+    ${C_WRAPPER_GENERATED_SRCS}
+    ${PYCPP_GENERATED_SRCS}
+  )
+  target_include_directories(DjinniPyTestNative PUBLIC
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp
+  )
+  target_link_libraries(DjinniPyTestNative djinni_support_lib)
+
+  # TODO Python test
 endif()
