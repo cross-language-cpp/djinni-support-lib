@@ -5,7 +5,9 @@ find_program(DJINNI_EXECUTABLE ${DJINNI_EXECUTABLE_NAMES}
   DOC "Path to the Djinni executable"
   PATHS ${DJINNI_EXECUTABLE_PATH})
 if(DJINNI_EXECUTABLE)
-  message(STATUS "Djinni executable: ${DJINNI_EXECUTABLE}")
+  execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_VERSION)
+  string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
+  message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
 else()
   message(FATAL_ERROR "Could not find DJINNI_EXECUTABLE using the following names: ${DJINNI_EXECUTABLE_NAMES}")
 endif()
@@ -363,7 +365,7 @@ function(add_djinni_target)
 
   if(DEFINED DJINNI_PYCFFI_OUT_FILES)
     set(DJINNI_PYCFFI_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
-    append_if_defined(DJINNI_PYCFFI_GENERATION_COMMAND "--py-out" ${DJINNI_PYCFFI_OUT})
+    append_if_defined(DJINNI_PYCFFI_GENERATION_COMMAND "--pycffi-out" ${DJINNI_PYCFFI_OUT})
 
     resolve_djinni_outputs(COMMAND "${DJINNI_PYCFFI_GENERATION_COMMAND}" RESULT PYCFFI_OUT_FILES)
 
@@ -371,7 +373,7 @@ function(add_djinni_target)
       OUTPUT ${PYCFFI_OUT_FILES}
       DEPENDS ${DJINNI_INPUTS}
       COMMAND ${DJINNI_PYCFFI_GENERATION_COMMAND}
-      COMMENT "Generating Djinni Python bindings from ${DJINNI_IDL}"
+      COMMENT "Generating Djinni CFFI bindings from ${DJINNI_IDL}"
       VERBATIM
     )
     set(${DJINNI_PYCFFI_OUT_FILES} ${PYCFFI_OUT_FILES} PARENT_SCOPE)
@@ -379,7 +381,7 @@ function(add_djinni_target)
 
   if(DEFINED DJINNI_C_WRAPPER_OUT_FILES)
     set(DJINNI_C_WRAPPER_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
-    append_if_defined(DJINNI_C_WRAPPER_GENERATION_COMMAND "--py-out" ${DJINNI_C_WRAPPER_OUT})
+    append_if_defined(DJINNI_C_WRAPPER_GENERATION_COMMAND "--c-wrapper-out" ${DJINNI_C_WRAPPER_OUT})
 
     resolve_djinni_outputs(COMMAND "${DJINNI_C_WRAPPER_GENERATION_COMMAND}" RESULT C_WRAPPER_OUT_FILES)
 
@@ -387,7 +389,7 @@ function(add_djinni_target)
       OUTPUT ${C_WRAPPER_OUT_FILES}
       DEPENDS ${DJINNI_INPUTS}
       COMMAND ${DJINNI_C_WRAPPER_GENERATION_COMMAND}
-      COMMENT "Generating Djinni Python bindings from ${DJINNI_IDL}"
+      COMMENT "Generating Djinni C Wrapper bindings from ${DJINNI_IDL}"
       VERBATIM
     )
     set(${DJINNI_C_WRAPPER_OUT_FILES} ${C_WRAPPER_OUT_FILES} PARENT_SCOPE)

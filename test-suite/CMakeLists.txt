@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6.0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 enable_testing()
 
@@ -100,8 +100,9 @@ file(GLOB_RECURSE CPP_HANDWRITTEN_SRCS "handwritten-src/cpp/*")
 file(GLOB_RECURSE JAVA_TEST_SRCS "handwritten-src/java/*")
 file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
 file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
-file(GLOB_RECURSE C_WRAPPER_TEST_SRCS "handwritten-src/cwrapper/*")
-file(GLOB_RECURSE PYCPP_TEST_SRCS "handwritten-src/pycpp/*")
+file(GLOB_RECURSE C_WRAPPER_HANDWRITTEN_SRCS "handwritten-src/cwrapper/*")
+file(GLOB_RECURSE PYCPP_HANDWRITTEN_SRCS "handwritten-src/pycpp/*")
+file(GLOB_RECURSE PYTHON_TEST_SRCS "handwritten-src/python/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})
@@ -203,9 +204,18 @@ endif()
 
 
 if(DJINNI_WITH_PYTHON)
-  add_library(DjinniPyTestNative STATIC
-    ${C_WRAPPER_TEST_SRCS}
-    ${PYCPP_TEST_SRCS}
+  # There's no YAML support in Djinni for Python yet.
+  set(FILTERED_CPP_HANDWRITTEN_SRCS ${CPP_HANDWRITTEN_SRCS})
+  list(REMOVE_ITEM FILTERED_CPP_HANDWRITTEN_SRCS
+    "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/TranslateDuration.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/flag_roundtrip.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/wchar_test_helpers.cpp"
+  )
+
+  add_library(DjinniPyTestNative SHARED
+    ${FILTERED_CPP_HANDWRITTEN_SRCS}
+    ${C_WRAPPER_HANDWRITTEN_SRCS}
+    ${PYCPP_HANDWRITTEN_SRCS}
     ${PYTHON_GENERATED_SRCS}
     ${PYCFFI_GENERATED_SRCS}
     ${C_WRAPPER_GENERATED_SRCS}
@@ -214,9 +224,24 @@ if(DJINNI_WITH_PYTHON)
   target_include_directories(DjinniPyTestNative PUBLIC
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/pycpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp
   )
   target_link_libraries(DjinniPyTestNative djinni_support_lib)
+
+  # Resolve Python 3 executable
+  set(PYTHON3_EXECUTABLE_NAMES "python3")
+  find_program(PYTHON3_EXECUTABLE ${PYTHON3_EXECUTABLE_NAMES}
+    DOC "Path to the Djinni executable"
+    PATHS ${PYTHON3_EXECUTABLE_PATH})
+  if(PYTHON3_EXECUTABLE)
+    execute_process(COMMAND ${PYTHON3_EXECUTABLE} "--version"
+      OUTPUT_VARIABLE PYTHON3_VERSION)
+    string(REGEX REPLACE "\n+$" "" PYTHON3_VERSION "${PYTHON3_VERSION}")
+    message(STATUS "Found Python: ${PYTHON3_EXECUTABLE} (${PYTHON3_VERSION})")
+  else()
+    message(FATAL_ERROR "Could not find Python 3")
+  endif()
 
   # TODO Python test
 endif()
