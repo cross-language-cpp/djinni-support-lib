@@ -102,7 +102,6 @@ file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
 file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
 file(GLOB_RECURSE C_WRAPPER_HANDWRITTEN_SRCS "handwritten-src/cwrapper/*")
 file(GLOB_RECURSE PYCPP_HANDWRITTEN_SRCS "handwritten-src/pycpp/*")
-file(GLOB_RECURSE PYTHON_TEST_SRCS "handwritten-src/python/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})
@@ -212,36 +211,47 @@ if(DJINNI_WITH_PYTHON)
     "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/wchar_test_helpers.cpp"
   )
 
-  add_library(DjinniPyTestNative SHARED
+  add_library(mylib SHARED
     ${FILTERED_CPP_HANDWRITTEN_SRCS}
     ${C_WRAPPER_HANDWRITTEN_SRCS}
     ${PYCPP_HANDWRITTEN_SRCS}
-    ${PYTHON_GENERATED_SRCS}
-    ${PYCFFI_GENERATED_SRCS}
     ${C_WRAPPER_GENERATED_SRCS}
     ${PYCPP_GENERATED_SRCS}
   )
-  target_include_directories(DjinniPyTestNative PUBLIC
+  target_include_directories(mylib PUBLIC
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/pycpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp
   )
-  target_link_libraries(DjinniPyTestNative djinni_support_lib)
+  target_link_libraries(mylib djinni_support_lib)
 
-  # Resolve Python 3 executable
-  set(PYTHON3_EXECUTABLE_NAMES "python3")
-  find_program(PYTHON3_EXECUTABLE ${PYTHON3_EXECUTABLE_NAMES}
-    DOC "Path to the Djinni executable"
-    PATHS ${PYTHON3_EXECUTABLE_PATH})
-  if(PYTHON3_EXECUTABLE)
-    execute_process(COMMAND ${PYTHON3_EXECUTABLE} "--version"
-      OUTPUT_VARIABLE PYTHON3_VERSION)
-    string(REGEX REPLACE "\n+$" "" PYTHON3_VERSION "${PYTHON3_VERSION}")
-    message(STATUS "Found Python: ${PYTHON3_EXECUTABLE} (${PYTHON3_VERSION})")
-  else()
-    message(FATAL_ERROR "Could not find Python 3")
-  endif()
+  # Prepare Python 3 environment
+  find_package(PythonInterp "3" REQUIRED)
+  string(JOIN ":" PYTHONPATH
+    "${CMAKE_SOURCE_DIR}/djinni/py"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
+    $ENV{PYTHONPATH})
 
-  # TODO Python test
+  # Compile Python extension module (CFFI)
+  add_custom_target(PyCFFIlib_cffi ALL DEPENDS PyCFFIlib_cffi.so)
+  set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
+  list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
+  add_custom_command(
+    OUTPUT PyCFFIlib_cffi.so
+    DEPENDS ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS}
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${PYTHON_EXECUTABLE}
+      ${PYCFFI_GENERATED_SRCS}
+      ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
+      ${C_WRAPPER_GENERATED_HEADERS}
+      ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cwrapper/limits_helper.h
+
+    # TODO Find out a way to resolve the name of the shared lib resulting from CFFI compilation step.
+    COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change @rpath/$<TARGET_FILE_NAME:mylib> $<TARGET_FILE:mylib> ${CMAKE_CURRENT_BINARY_DIR}/PyCFFIlib_cffi.cpython-39-darwin.so
+  )
+
+  add_test(
+    NAME PythonTests
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
+  )
 endif()
