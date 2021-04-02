@@ -234,24 +234,32 @@ if(DJINNI_WITH_PYTHON)
     $ENV{PYTHONPATH})
 
   # Compile Python extension module (CFFI)
-  add_custom_target(PyCFFIlib_cffi ALL DEPENDS PyCFFIlib_cffi.so)
   set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
   list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
-  add_custom_command(
-    OUTPUT PyCFFIlib_cffi.so
-    DEPENDS ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS}
-    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${PYTHON_EXECUTABLE}
-      ${PYCFFI_GENERATED_SRCS}
-      ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
-      ${C_WRAPPER_GENERATED_HEADERS}
-      ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cwrapper/limits_helper.h
-
-    # TODO Find out a way to resolve the name of the shared lib resulting from CFFI compilation step.
-    COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change @rpath/$<TARGET_FILE_NAME:mylib> $<TARGET_FILE:mylib> ${CMAKE_CURRENT_BINARY_DIR}/PyCFFIlib_cffi.cpython-39-darwin.so
+  add_custom_target(PyCFFIlib_cffi ALL
+    ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${PYTHON_EXECUTABLE}
+        ${PYCFFI_GENERATED_SRCS}
+        ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
+        ${C_WRAPPER_GENERATED_HEADERS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cwrapper/limits_helper.h
+    DEPENDS ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS} ${C_WRAPPER_GENERATED_HEADERS}
+    COMMENT "Building CFFI lib"
+    VERBATIM
   )
 
-  add_test(
-    NAME PythonTests
-    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
+  # Replace @rpath/mylib reference with absolute path on the PyCFFIlib_cffi lib
+  if(DEFINED CMAKE_INSTALL_NAME_TOOL)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rpath_hack.py ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py INPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
+    add_custom_command(
+      TARGET PyCFFIlib_cffi POST_BUILD
+      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py
+      COMMENT "Patching CFFI lib"
+      VERBATIM
+    )
+  endif()
+
+  add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
+    ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
   )
 endif()
