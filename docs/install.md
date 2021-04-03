@@ -4,8 +4,9 @@
 
 The library is available at [conan-center](https://conan.io/center/djinni-support-lib):
 
-```sh
-conan install djinni-support-lib/0.0.1@
+```
+[requires]
+djinni-support-lib/0.0.1
 ```
 
 ### Options
