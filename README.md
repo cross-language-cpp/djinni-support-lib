@@ -1,4 +1,4 @@
-# Djinni support lib
+# Djinni Support Lib
 
 [![Build](https://github.com/cross-language-cpp/djinni-support-lib/actions/workflows/build.yml/badge.svg)](https://github.com/cross-language-cpp/djinni-support-lib/actions/workflows/build.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/cross-language-cpp/djinni-support-lib)](https://github.com/cross-language-cpp/djinni-support-lib/releases/latest)
