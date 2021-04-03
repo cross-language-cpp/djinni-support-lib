@@ -1,3 +1,4 @@
 site_name: djinni-support-lib
 nav:
-  - "install.md"
+  - install.md
+  - developer-guide.md
