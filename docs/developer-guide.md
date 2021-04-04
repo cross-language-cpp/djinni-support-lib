@@ -2,7 +2,7 @@
 
 !!! info
 
-    This chapter is only interesting if you intend to make changes to the code of djinni generator
+    This chapter is only interesting if you intend to make changes to the code of djinni-support-lib
 
 ## Building from source
 
