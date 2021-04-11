@@ -25,6 +25,16 @@ set(SRC_OBJC
   "djinni/objc/DJIProxyCaches.mm"
 )
 
+set(SRC_CPPCLI
+  "djinni/cppcli/Assert.hpp"
+  "djinni/cppcli/AutoPtr.hpp"
+  "djinni/cppcli/Error.hpp"
+  "djinni/cppcli/Error.cpp"
+  "djinni/cppcli/Marshal.hpp"
+  "djinni/cppcli/WrapperCache.hpp"
+  "djinni/cppcli/WrapperCache.cpp"
+)
+
 option(DJINNI_STATIC_LIB "Build Djinni support library as a static library instead of dynamic (the default)." off)
 if(DJINNI_STATIC_LIB)
   add_library(djinni_support_lib STATIC ${SRC_SHARED})
@@ -106,8 +116,27 @@ if(DJINNI_WITH_JNI)
   endif()
 endif()
 
-if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
-  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI must be enabled.")
+option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
+if(DJINNI_WITH_CPPCLI)
+  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cppcli/>")
+  target_sources(djinni_support_lib PRIVATE ${SRC_CPPCLI})
+  source_group("cppcli" FILES ${SRC_CPPCLI})
+  target_compile_options(djinni_support_lib PUBLIC "/clr")
+
+  install(
+    FILES
+      "djinni/cppcli/Assert.hpp"
+      "djinni/cppcli/AutoPtr.hpp"
+      "djinni/cppcli/Error.hpp"
+      "djinni/cppcli/Marshal.hpp"
+      "djinni/cppcli/WrapperCache.hpp"
+    DESTINATION
+      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cppcli
+  )
+endif()
+
+if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_CPPCLI))
+  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC, DJINNI_WITH_JNI or DJINNI_WITH_CPPCLI must be enabled.")
 endif()
 
 
