@@ -98,8 +98,9 @@ endif()
 
 # JNI support
 option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." off)
+option(DJINNI_JNI_WITH_MAIN "Include the default minimal JNI_OnLoad and JNI_OnUnload implementation in Djinni support library." on)
 if(DJINNI_WITH_JNI)
-  if(NOT DJINNI_STATIC_LIB)
+  if(DJINNI_JNI_WITH_MAIN)
     list(APPEND SRC_JNI "djinni/jni/djinni_main.cpp")
   endif()
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
