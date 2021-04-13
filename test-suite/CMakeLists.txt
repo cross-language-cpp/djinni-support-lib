@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.6.0)
 
 set(CMAKE_CXX_STANDARD 14)
 
+
+if(APPLE)
+    set(MACOSX_RPATH TRUE)
+    set(CMAKE_MACOSX_RPATH ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+
+
 enable_testing()
 
 
@@ -198,7 +206,7 @@ if(DJINNI_WITH_OBJC)
   xctest_add_bundle(DjinniObjcTestTests DjinniObjcTest ${OBJC_TEST_SRCS})
   target_include_directories(DjinniObjcTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/objc/impl)
 
-  xctest_add_test(XCTest.DjinniObjcTest DjinniObjcTestTests) 
+  xctest_add_test(XCTest.DjinniObjcTest DjinniObjcTestTests)
 endif()
 
 
@@ -249,14 +257,14 @@ if(DJINNI_WITH_PYTHON)
 
   # Replace @rpath/mylib reference with absolute path on the PyCFFIlib_cffi lib
   if(DEFINED CMAKE_INSTALL_NAME_TOOL)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rpath_hack.py ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py INPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
-    add_custom_command(
-      TARGET PyCFFIlib_cffi POST_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py
-      COMMENT "Patching CFFI lib"
-      VERBATIM
-    )
+    # configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rpath_hack.py ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
+    # file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py INPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
+    # add_custom_command(
+    #   TARGET PyCFFIlib_cffi POST_BUILD
+    #   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py
+    #   COMMENT "Patching CFFI lib"
+    #   VERBATIM
+    # )
   endif()
 
   add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
