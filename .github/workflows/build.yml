@@ -42,3 +42,14 @@ jobs:
     - name: Test if expected files have been installed
       working-directory: build/check_install_root
       run: diff -u ../../test/jni_list.txt <(du -a | tac | awk -F ' ' '{print $2}' | sort)
+
+  build-on-windows-for-cppcli:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DDJINNI_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=check_install_root
+    - name: Build release
+      run: cmake --build build --parallel $((Get-CimInstance -ClassName Win32_ComputerSystem).NumberOfProcessors) --config Release
+    - name: Install files
+      run: cmake --build build --parallel $((Get-CimInstance -ClassName Win32_ComputerSystem).NumberOfProcessors) --config Release --target install

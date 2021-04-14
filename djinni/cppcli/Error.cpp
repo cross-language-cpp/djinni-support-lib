@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#include "Error.cpp"
+#include "Error.hpp"
 
 namespace djinni {
 

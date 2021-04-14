@@ -118,10 +118,22 @@ endif()
 
 option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
 if(DJINNI_WITH_CPPCLI)
-  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cppcli/>")
+
+  if(NOT MSVC)
+    message(FATAL_ERROR "Enabling DJINNI_WITH_CPPCLI without MSVC is not supported")
+  endif()
+
+  if(NOT DJINNI_STATIC_LIB)
+    message(FATAL_ERROR "DJINNI_WITH_CPPCLI requires DJINNI_STATIC_LIB to be true")
+  endif()
+
+  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/support-lib/cppcli/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_CPPCLI})
   source_group("cppcli" FILES ${SRC_CPPCLI})
-  target_compile_options(djinni_support_lib PUBLIC "/clr")
+  set_target_properties(djinni_support_lib PROPERTIES
+    VS_DOTNET_REFERENCES "System;System.Core"
+    COMMON_LANGUAGE_RUNTIME ""
+  )
 
   install(
     FILES

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "WrapperCache.cpp"
+#include "WrapperCache.hpp"
 #include "../proxy_cache_impl.hpp"
 
 namespace djinni {
