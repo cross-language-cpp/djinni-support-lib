@@ -1,0 +1,13 @@
+.\include
+.\lib
+.\include\djinni
+.\include\djinni\cppcli
+.\include\djinni\proxy_cache_interface.hpp
+.\include\djinni\proxy_cache_impl.hp
+.\include\djinni\djinni_common.hpp
+.\include\djinni\cppcli\Marshal.hpp
+.\include\djinni\cppcli\AutoPtr.hpp
+.\include\djinni\cppcli\Error.hpp
+.\include\djinni\cppcli\Assert.hpp
+.\include\djinni\cppcli\WrapperCache.hpp
+.\lib\djinni_support_lib.lib

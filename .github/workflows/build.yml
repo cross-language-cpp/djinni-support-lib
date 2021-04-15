@@ -51,5 +51,15 @@ jobs:
       run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DDJINNI_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=check_install_root
     - name: Build release
       run: cmake --build build --parallel $((Get-CimInstance -ClassName Win32_ComputerSystem).NumberOfProcessors) --config Release
+    - name: Run tests
+      working-directory: build/test-suite
+      run: ctest -C Release -V
     - name: Install files
       run: cmake --build build --parallel $((Get-CimInstance -ClassName Win32_ComputerSystem).NumberOfProcessors) --config Release --target install
+    - name: List installed files
+      working-directory: build/check_install_root
+      run: Resolve-Path -Path (Get-ChildItem -Recurse).FullName -Relative
+    - name: Test if expected files have been installed
+      working-directory: build/check_install_root
+      run: if((Compare-Object (Get-Content ..\test\cppcli_list.txt) (Resolve-Path -Path (Get-ChildItem -Recurse).FullName -Relative))) { Write-Error "file list not equal" }
+
