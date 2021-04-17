@@ -254,19 +254,7 @@ if(DJINNI_WITH_PYTHON)
     COMMENT "Building CFFI lib"
     VERBATIM
   )
-
-  # Replace @rpath/mylib reference with absolute path on the PyCFFIlib_cffi lib
-  if(DEFINED CMAKE_INSTALL_NAME_TOOL)
-    # configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rpath_hack.py ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
-    # file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py INPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
-    # add_custom_command(
-    #   TARGET PyCFFIlib_cffi POST_BUILD
-    #   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py
-    #   COMMENT "Patching CFFI lib"
-    #   VERBATIM
-    # )
-  endif()
-
+ 
   add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
     ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
   )
