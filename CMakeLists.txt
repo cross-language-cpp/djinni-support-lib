@@ -33,13 +33,6 @@ set(SRC_C_WRAPPER
   "djinni/cwrapper/wrapper_marshal.hpp"
 )
 
-set(SRC_PY
-  "djinni/py/djinni/__init__.py"
-  "djinni/py/djinni/exception.py"
-  "djinni/py/djinni/pycffi_marshal.py"
-  "djinni/py/djinni/support.py"
-)
-
 option(DJINNI_STATIC_LIB "Build Djinni support library as a static library instead of dynamic (the default)." off)
 if(DJINNI_STATIC_LIB)
   add_library(djinni_support_lib STATIC ${SRC_SHARED})
