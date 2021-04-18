@@ -1,13 +1,14 @@
+cmake_minimum_required(VERSION 3.18)
 
-# Resolve DJINNI_EXECUTABLE
-set(DJINNI_EXECUTABLE_NAMES "djinni")
-find_program(DJINNI_EXECUTABLE ${DJINNI_EXECUTABLE_NAMES}
-  DOC "Path to the Djinni executable"
-  PATHS ${DJINNI_EXECUTABLE_PATH})
-if(DJINNI_EXECUTABLE)
-  message(STATUS "Djinni executable: ${DJINNI_EXECUTABLE}")
+# find Djinni executable.
+# On windows find_program() does not work for finding the `djinni.bat` script.
+# The script must either be on the PATH or `DJINNI_EXECUTABLE` must explicitly be predefined.
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+  if(NOT DEFINED CACHE{DJINNI_EXECUTABLE})
+    set(DJINNI_EXECUTABLE djinni.bat CACHE FILEPATH "path of djinni binary")
+  endif()
 else()
-  message(FATAL_ERROR "Could not find DJINNI_EXECUTABLE using the following names: ${DJINNI_EXECUTABLE_NAMES}")
+  find_program(DJINNI_EXECUTABLE djinni REQUIRED)
 endif()
 
 
@@ -152,6 +153,12 @@ function(add_djinni_target)
     OBJCPP_NAMESPACE
     OBJC_BASE_LIB_INCLUDE_PREFIX
 
+    CPPCLI_OUT
+    CPPCLI_OUT_FILES
+    CPPCLI_NAMESPACE
+    CPPCLI_INCLUDE_CPP_PREFIX
+    CPPCLI_BASE_LIB_INCLUDE_PREFIX
+
     YAML_OUT
     YAML_OUT_FILE
     YAML_PREFIX
@@ -229,6 +236,10 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--objc-extended-record-include-prefix" ${DJINNI_OBJC_EXTENDED_RECORD_INCLUDE_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--objcpp-namespace" ${DJINNI_OBJCPP_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--objc-base-lib-include-prefix" ${DJINNI_OBJC_BASE_LIB_INCLUDE_PREFIX})
+
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-namespace" ${DJINNI_CPPCLI_NAMESPACE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-include-cpp-prefix" ${DJINNI_CPPCLI_INCLUDE_CPP_PREFIX})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-base-lib-include-prefix" ${DJINNI_CPPCLI_BASE_LIB_INCLUDE_PREFIX})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
@@ -312,6 +323,22 @@ function(add_djinni_target)
       VERBATIM
     )
     set(${DJINNI_OBJCPP_OUT_FILES} ${OBJCPP_OUT_FILES} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED DJINNI_CPPCLI_OUT_FILES)
+    set(DJINNI_CPPCLI_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_CPPCLI_GENERATION_COMMAND "--cppcli-out" ${DJINNI_CPPCLI_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_CPPCLI_GENERATION_COMMAND}" RESULT CPPCLI_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${CPPCLI_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_CPPCLI_GENERATION_COMMAND}
+      COMMENT "Generating Djinni C++/CLI bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_CPPCLI_OUT_FILES} ${CPPCLI_OUT_FILES} PARENT_SCOPE)
   endif()
 
 endfunction()

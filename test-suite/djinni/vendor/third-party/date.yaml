@@ -30,3 +30,8 @@ jni:
   header: '"djinni/jni/Marshal.hpp"'
   typename: jobject
   typeSignature: 'Ljava/util/Date;'
+cs:
+  translator: '::djinni::Date'
+  header: '"djinni/cppcli/Marshal.hpp"'
+  typename: 'System::DateTime'
+  reference: false

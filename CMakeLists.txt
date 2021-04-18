@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6.0)
 
-project(djinni_support_lib)
+project(djinni_support_lib CXX)
 
 include(GNUInstallDirs)
 
@@ -90,6 +90,8 @@ if(DJINNI_WITH_OBJC)
   endif()
 
 endif()
+
+target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
 
 # JNI support
 option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." off)
