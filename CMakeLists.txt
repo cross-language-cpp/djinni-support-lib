@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.6.0)
 
-project(djinni_support_lib CXX)
+if(DJINNI_WITH_OBJC)
+  set(TEST_PROJECT_LANGUAGES OBJC OBJCXX)
+elseif(DJINNI_WITH_CPPCLI)
+  set(TEST_PROJECT_LANGUAGES CSharp)
+endif()
+
+project(djinni_support_lib CXX ${TEST_PROJECT_LANGUAGES})
 
 include(GNUInstallDirs)
 

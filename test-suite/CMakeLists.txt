@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 3.6.0)
 
-if(DJINNI_WITH_OBJC)
-  set(TEST_PROJECT_LANGUAGES OBJC OBJCXX)
-elseif(DJINNI_WITH_CPPCLI)
-  set(TEST_PROJECT_LANGUAGES CSharp)
-endif()
-
-project(djinni_support_lib_test CXX ${TEST_PROJECT_LANGUAGES})
-
 set(CMAKE_CXX_STANDARD 11)
 
 enable_testing()
