@@ -7,7 +7,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G Xcode
+      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_WITH_PYTHON=ON -DDJINNI_STATIC_LIB=ON -G Xcode
     - name: Build release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - name: Run tests
@@ -28,7 +28,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DDJINNI_STATIC_LIB=ON
+      run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DDJINNI_WITH_PYTHON=ON -DDJINNI_STATIC_LIB=ON
     - name: Build release
       run: cmake --build build --parallel $(nproc) --config Release
     - name: Run tests
