@@ -148,6 +148,7 @@ if(DJINNI_WITH_PYTHON)
     )
 endif()
 
+option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
 if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
@@ -180,8 +181,7 @@ endif()
 
 if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_CPPCLI))
   message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI must be enabled.")
-  option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
-
+endif()
 
 
 include(CTest)
