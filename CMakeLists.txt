@@ -31,6 +31,14 @@ set(SRC_OBJC
   "djinni/objc/DJIProxyCaches.mm"
 )
 
+set(SRC_C_WRAPPER
+  "djinni/cwrapper/thread_local.cpp"
+  "djinni/cwrapper/thread_local.hpp"
+  "djinni/cwrapper/wrapper_marshal.cpp"
+  "djinni/cwrapper/wrapper_marshal.h"
+  "djinni/cwrapper/wrapper_marshal.hpp"
+)
+
 set(SRC_CPPCLI
   "djinni/cppcli/Assert.hpp"
   "djinni/cppcli/AutoPtr.hpp"
@@ -50,7 +58,7 @@ endif()
 source_group("" FILES ${SRC_SHARED})
 
 set_target_properties(djinni_support_lib PROPERTIES
-  CXX_STANDARD 11
+  CXX_STANDARD 17
   CXX_STANDARD_REQUIRED true
   CXX_EXTENSIONS false
 )
@@ -101,8 +109,9 @@ target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_
 
 # JNI support
 option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." off)
+option(DJINNI_JNI_WITH_MAIN "Include the default minimal JNI_OnLoad and JNI_OnUnload implementation in Djinni support library." on)
 if(DJINNI_WITH_JNI)
-  if(NOT DJINNI_STATIC_LIB)
+  if(DJINNI_JNI_WITH_MAIN)
     list(APPEND SRC_JNI "djinni/jni/djinni_main.cpp")
   endif()
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
@@ -124,7 +133,21 @@ if(DJINNI_WITH_JNI)
   endif()
 endif()
 
-option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
+# Python support
+option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." off)
+if(DJINNI_WITH_PYTHON)
+  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
+  target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
+  source_group("cwrapper" FILES ${SRC_C_WRAPPER})
+
+  install(
+    FILES
+    "djinni/cwrapper/wrapper_marshal.h"
+    DESTINATION
+    ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
+    )
+endif()
+
 if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
@@ -155,9 +178,10 @@ if(DJINNI_WITH_CPPCLI)
   )
 endif()
 
-if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_CPPCLI))
-  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC, DJINNI_WITH_JNI or DJINNI_WITH_CPPCLI must be enabled.")
-endif()
+if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_CPPCLI))
+  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI must be enabled.")
+  option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
+
 
 
 include(CTest)

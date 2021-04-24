@@ -3,3 +3,4 @@ build/*
 .idea/
 cmake-build-debug/
 check_install_root/
+*.pyc

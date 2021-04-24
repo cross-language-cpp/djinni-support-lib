@@ -2,3 +2,4 @@ site_name: djinni-support-lib
 nav:
   - install.md
   - developer-guide.md
+  - python-support.md
