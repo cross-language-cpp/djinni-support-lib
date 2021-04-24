@@ -71,6 +71,8 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - name: install djinni
+      run: Invoke-WebRequest -Uri https://github.com/cross-language-cpp/djinni-generator/releases/download/v0.5.0/djinni.bat -OutFile djinni.bat
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DDJINNI_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -G "Visual Studio 16 2019"
     - name: Install nuget dependencies
