@@ -9,6 +9,7 @@
 #include "primitive_list.hpp"
 #include "set_record.hpp"
 #include <exception>
+#include <stdexcept>
 
 namespace testsuite {
 

@@ -2,16 +2,12 @@ cmake_minimum_required(VERSION 3.6.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
 if(APPLE)
     set(MACOSX_RPATH TRUE)
     set(CMAKE_MACOSX_RPATH ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
-
-
 enable_testing()
-
 
 include(Djinni.cmake)
 
@@ -22,7 +18,7 @@ add_djinni_target(DjinniAllTests
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
   CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "<optional>"
+  CPP_OPTIONAL_HEADER "\"optional\""
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   JAVA_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/java"
@@ -59,7 +55,7 @@ add_djinni_target(DjinniWCharTests
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
   CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "<optional>"
+  CPP_OPTIONAL_HEADER "\"optional\""
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   CPP_USE_WIDE_STRINGS
@@ -102,7 +98,7 @@ add_djinni_target(DjinniPyTests
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
   CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "<optional>"
+  CPP_OPTIONAL_HEADER "\"optional\""
 
   PY_OUT_FILES         PYTHON_GENERATED_SRCS
   PYCFFI_OUT_FILES     PYCFFI_GENERATED_SRCS

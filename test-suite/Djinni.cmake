@@ -11,6 +11,10 @@ else()
   find_program(DJINNI_EXECUTABLE djinni REQUIRED)
 endif()
 
+execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_VERSION)
+string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
+message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
+
 
 macro(append_if_defined LIST OPTION)
   if(NOT "${ARGN}" STREQUAL "")
@@ -42,8 +46,7 @@ macro(resolve_djinni_inputs)
     message(FATAL_ERROR ${DJINNI_STDERR})
   endif()
 
-  file(READ ${DJINNI_INPUTS_TXT} ${DJINNI_RESULT})
-  string(REGEX REPLACE "\n" ";" ${DJINNI_RESULT} ${${DJINNI_RESULT}})
+  file(STRINGS ${DJINNI_INPUTS_TXT} ${DJINNI_RESULT})
 endmacro()
 
 macro(resolve_djinni_outputs)
@@ -52,6 +55,7 @@ macro(resolve_djinni_outputs)
   cmake_parse_arguments(DJINNI "" "${SINGLE_VALUE}" "${MULTI_VALUE}" "${ARGN}")
 
   set(DJINNI_OUTPUTS_TXT "${CMAKE_CURRENT_BINARY_DIR}/${DJINNI_RESULT}.txt")
+
   execute_process(
     COMMAND ${DJINNI_COMMAND} "--skip-generation" "true" "--list-out-files" "${DJINNI_OUTPUTS_TXT}"
     RESULT_VARIABLE DJINNI_CONFIGURATION_RESULT
@@ -62,9 +66,7 @@ macro(resolve_djinni_outputs)
     message(FATAL_ERROR ${DJINNI_STDERR})
   endif()
 
-  file(READ ${DJINNI_OUTPUTS_TXT} FILE_CONTENTS)
-  file(READ ${DJINNI_OUTPUTS_TXT} ${DJINNI_RESULT})
-  string(REGEX REPLACE "\n" ";" ${DJINNI_RESULT} ${${DJINNI_RESULT}})
+  file(STRINGS ${DJINNI_OUTPUTS_TXT} ${DJINNI_RESULT})
 endmacro()
 
 
@@ -199,7 +201,7 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-ext" ${DJINNI_CPP_EXT})
   append_if_defined(DJINNI_GENERATION_COMMAND "--hpp-ext" ${DJINNI_HPP_EXT})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-optional-template" ${DJINNI_CPP_OPTIONAL_TEMPLATE})
-  append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-optional-header" ${DJINNI_CPP_OPTIONAL_HEADER})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-optional-header" "${DJINNI_CPP_OPTIONAL_HEADER}")
   append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-nn-header" ${DJINNI_CPP_NN_HEADER})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-nn-type" ${DJINNI_CPP_NN_TYPE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-nn-check-expression" ${DJINNI_CPP_NN_CHECK_EXPRESSION})
