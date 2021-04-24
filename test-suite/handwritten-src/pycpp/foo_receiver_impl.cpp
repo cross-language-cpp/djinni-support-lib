@@ -55,20 +55,20 @@ std::shared_ptr<FooListener>  FooReceiverImpl::get_optional_listener() {
     return m_listener;
 }
 
-std::experimental::optional<int32_t> FooReceiverImpl::cause_changes_int_optional_returned(
-    std::experimental::optional<int32_t> i,
+std::optional<int32_t> FooReceiverImpl::cause_changes_int_optional_returned(
+    std::optional<int32_t> i,
     float f,
-    const std::experimental::optional<std::string> & s ,
+    const std::optional<std::string> & s ,
     const std::vector<uint8_t> & binar,
     bool b, const std::chrono::system_clock::time_point & d) {
 
     return m_listener->on_changes_int_optional_returned(i,f,s,binar,b,d);
 }
 
-std::experimental::optional<std::string> FooReceiverImpl::cause_changes_string_optional_returned(
-    std::experimental::optional<int32_t> i,
+std::optional<std::string> FooReceiverImpl::cause_changes_string_optional_returned(
+    std::optional<int32_t> i,
     float f,
-    const std::experimental::optional<std::string> & s ,
+    const std::optional<std::string> & s ,
     const std::vector<uint8_t> & binar,
     bool b, const std::chrono::system_clock::time_point & d) {
 

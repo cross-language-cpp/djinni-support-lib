@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.6.0)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+
+
+if(APPLE)
+    set(MACOSX_RPATH TRUE)
+    set(CMAKE_MACOSX_RPATH ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+
 
 enable_testing()
 
@@ -13,9 +21,8 @@ add_djinni_target(DjinniAllTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::experimental::optional"
-  CPP_OPTIONAL_HEADER "<experimental/optional>"
-  CPP_OPTIONAL_HEADER "\"test-suite/handwritten-src/cpp/optional.hpp\""
+  CPP_OPTIONAL_TEMPLATE "std::optional"
+  CPP_OPTIONAL_HEADER "<optional>"
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   JAVA_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/java"
@@ -51,9 +58,8 @@ add_djinni_target(DjinniWCharTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::experimental::optional"
-  CPP_OPTIONAL_HEADER "<experimental/optional>"
-  CPP_OPTIONAL_HEADER "\"test-suite/handwritten-src/cpp/optional.hpp\""
+  CPP_OPTIONAL_TEMPLATE "std::optional"
+  CPP_OPTIONAL_HEADER "<optional>"
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   CPP_USE_WIDE_STRINGS
@@ -95,8 +101,8 @@ add_djinni_target(DjinniPyTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::experimental::optional"
-  CPP_OPTIONAL_HEADER "\"test-suite/handwritten-src/cpp/optional.hpp\""
+  CPP_OPTIONAL_TEMPLATE "std::optional"
+  CPP_OPTIONAL_HEADER "<optional>"
 
   PY_OUT_FILES         PYTHON_GENERATED_SRCS
   PYCFFI_OUT_FILES     PYCFFI_GENERATED_SRCS
@@ -206,7 +212,7 @@ if(DJINNI_WITH_OBJC)
   xctest_add_bundle(DjinniObjcTestTests DjinniObjcTest ${OBJC_TEST_SRCS})
   target_include_directories(DjinniObjcTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/objc/impl)
 
-  xctest_add_test(XCTest.DjinniObjcTest DjinniObjcTestTests) 
+  xctest_add_test(XCTest.DjinniObjcTest DjinniObjcTestTests)
 endif()
 
 
@@ -254,19 +260,7 @@ if(DJINNI_WITH_PYTHON)
     COMMENT "Building CFFI lib"
     VERBATIM
   )
-
-  # Replace @rpath/mylib reference with absolute path on the PyCFFIlib_cffi lib
-  if(DEFINED CMAKE_INSTALL_NAME_TOOL)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rpath_hack.py ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py INPUT ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py.in)
-    add_custom_command(
-      TARGET PyCFFIlib_cffi POST_BUILD
-      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/rpath_hack.py
-      COMMENT "Patching CFFI lib"
-      VERBATIM
-    )
-  endif()
-
+ 
   add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
     ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
   )

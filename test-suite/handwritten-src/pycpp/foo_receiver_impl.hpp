@@ -30,17 +30,17 @@ public:
                                     bool b, const std::chrono::system_clock::time_point & d) override;
     virtual FooSomeOtherRecord cause_changes_record_returned(int32_t n1, int32_t n2) override;
 
-    virtual std::experimental::optional<int32_t> cause_changes_int_optional_returned(
-        std::experimental::optional<int32_t>,
+    virtual std::optional<int32_t> cause_changes_int_optional_returned(
+        std::optional<int32_t>,
         float,
-        const std::experimental::optional<std::string> &,
+        const std::optional<std::string> &,
         const std::vector<uint8_t> &,
         bool, const std::chrono::system_clock::time_point &) override;
 
-    virtual std::experimental::optional<std::string> cause_changes_string_optional_returned(
-        std::experimental::optional<int32_t>,
+    virtual std::optional<std::string> cause_changes_string_optional_returned(
+        std::optional<int32_t>,
         float,
-        const std::experimental::optional<std::string> &,
+        const std::optional<std::string> &,
         const std::vector<uint8_t> &,
         bool, const std::chrono::system_clock::time_point &) override;
 

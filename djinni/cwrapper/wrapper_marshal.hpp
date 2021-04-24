@@ -8,7 +8,7 @@
 #include <chrono>
 #include <thread>
 #include <assert.h>
-#include "../../test-suite/handwritten-src/cpp/optional.hpp"
+#include <optional>
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,8 +78,8 @@ class Primitive {
 public:
     explicit Primitive(CppType data): m_data(data) {};
 
-    static std::experimental::optional<CppType> toCpp(std::unique_ptr<DjinniType> dopt);
-    static std::unique_ptr<DjinniType> fromCpp(std::experimental::optional<CppType> copt);
+    static std::optional<CppType> toCpp(std::unique_ptr<DjinniType> dopt);
+    static std::unique_ptr<DjinniType> fromCpp(std::optional<CppType> copt);
 
     static std::unique_ptr<DjinniType> newOptional(CppType data);
     CppType m_data;
@@ -87,16 +87,16 @@ public:
 
 // Optional Primitives toCpp
 template<class CppType, class DjinniType>
-std::experimental::optional<CppType> Primitive<CppType, DjinniType>::toCpp(std::unique_ptr<DjinniType> dopt) {
+std::optional<CppType> Primitive<CppType, DjinniType>::toCpp(std::unique_ptr<DjinniType> dopt) {
     if (dopt) {
         return std::move(dopt->m_data);
     }
-    return std::experimental::nullopt;
+    return std::nullopt;
 }
 
 // Optional Primitives fromCpp
 template<class CppType, class DjinniType>
-std::unique_ptr<DjinniType> Primitive<CppType, DjinniType>::fromCpp(std::experimental::optional<CppType> copt) {
+std::unique_ptr<DjinniType> Primitive<CppType, DjinniType>::fromCpp(std::optional<CppType> copt) {
     if (copt){
         return std::unique_ptr<DjinniType>(new DjinniType {std::move(* copt)});
     }
@@ -199,8 +199,8 @@ struct DjinniDate {
 struct DjinniBoxedDate : public djinni::optionals::Primitive<uint64_t, DjinniBoxedDate> {
     DjinniBoxedDate(uint64_t data): djinni::optionals::Primitive<uint64_t, DjinniBoxedDate>(data) {};
 
-    static std::experimental::optional<std::chrono::system_clock::time_point> toCpp(std::unique_ptr<DjinniBoxedDate> dopt);
-    static std::unique_ptr<DjinniBoxedDate> fromCpp(std::experimental::optional<std::chrono::system_clock::time_point> dopt);
+    static std::optional<std::chrono::system_clock::time_point> toCpp(std::unique_ptr<DjinniBoxedDate> dopt);
+    static std::unique_ptr<DjinniBoxedDate> fromCpp(std::optional<std::chrono::system_clock::time_point> dopt);
 
     static std::unique_ptr<DjinniBoxedDate> newOptional(std::chrono::system_clock::time_point data);
 };
@@ -209,11 +209,11 @@ using DjinniObject = std::shared_ptr<DjinniObjectHandle>;
 
 // OTHER OPTIONALS
 struct DjinniOptionalString {
-    static std::experimental::optional<std::string>  toCpp(std::unique_ptr<DjinniString> dopt);
-    static std::unique_ptr<DjinniString> fromCpp(std::experimental::optional<std::string> ds);
+    static std::optional<std::string>  toCpp(std::unique_ptr<DjinniString> dopt);
+    static std::unique_ptr<DjinniString> fromCpp(std::optional<std::string> ds);
 };
 
 struct DjinniOptionalBinary {
-    static std::experimental::optional<std::vector<uint8_t>>  toCpp(std::unique_ptr<DjinniBinary> dopt);
-    static std::unique_ptr<DjinniBinary> fromCpp(std::experimental::optional<std::vector<uint8_t>> ds);
+    static std::optional<std::vector<uint8_t>>  toCpp(std::unique_ptr<DjinniBinary> dopt);
+    static std::unique_ptr<DjinniBinary> fromCpp(std::optional<std::vector<uint8_t>> ds);
 };

@@ -21,9 +21,9 @@ public:
 
     static std::chrono::system_clock::time_point date_id(const std::chrono::system_clock::time_point & d);
 
-    static std::experimental::optional<std::chrono::system_clock::time_point> opt_date_id(const std::experimental::optional<std::chrono::system_clock::time_point> & od);
+    static std::optional<std::chrono::system_clock::time_point> opt_date_id(const std::optional<std::chrono::system_clock::time_point> & od);
 
-    static std::experimental::optional<int64_t> opt_i64_id(std::experimental::optional<int64_t> oi);
+    static std::optional<int64_t> opt_i64_id(std::optional<int64_t> oi);
 
 private:
     static std::string s_messg;

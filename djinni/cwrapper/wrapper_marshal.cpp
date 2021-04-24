@@ -10,8 +10,8 @@
 
 using namespace djinni;
 using namespace djinni::optionals;
-using std::experimental::optional;
-using std::experimental::nullopt;
+using std::optional;
+using std::nullopt;
 
 // Helpers to convert from a 'handle type' to a 'optional-handle type' or the other way around
 // Useful in generated code, when marshaling and unmarshaling optional structured types, as it helps differentiate
@@ -297,7 +297,7 @@ uint64_t DjinniDate::fromCpp(std::chrono::system_clock::time_point date) {
 }
 
 // OPTIONAL DJINNI DATE
-std::experimental::optional<std::chrono::system_clock::time_point>
+std::optional<std::chrono::system_clock::time_point>
 DjinniBoxedDate::toCpp(std::unique_ptr<DjinniBoxedDate> dopt) {
     if (!dopt) {
         return nullopt;
@@ -306,7 +306,7 @@ DjinniBoxedDate::toCpp(std::unique_ptr<DjinniBoxedDate> dopt) {
 }
 
 std::unique_ptr<DjinniBoxedDate>
-DjinniBoxedDate::fromCpp(std::experimental::optional<std::chrono::system_clock::time_point> dopt) {
+DjinniBoxedDate::fromCpp(std::optional<std::chrono::system_clock::time_point> dopt) {
     if (!dopt) {
         return nullptr;
     }

@@ -136,7 +136,7 @@ void TestHelpers::check_token_type(const std::shared_ptr<UserToken> &t, const st
     }
 }
 
-std::experimental::optional<int32_t> TestHelpers::return_none() {
+std::optional<int32_t> TestHelpers::return_none() {
     return {};
 }
 
