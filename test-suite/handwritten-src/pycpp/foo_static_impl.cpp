@@ -33,11 +33,11 @@ std::chrono::system_clock::time_point FooStatic::date_id(const std::chrono::syst
     return FooStaticImpl::date_id(d);
 }
 
-std::experimental::optional<std::chrono::system_clock::time_point> FooStatic::opt_date_id(const std::experimental::optional<std::chrono::system_clock::time_point> & od) {
+std::optional<std::chrono::system_clock::time_point> FooStatic::opt_date_id(const std::optional<std::chrono::system_clock::time_point> & od) {
     return FooStaticImpl::opt_date_id(od);
 }
 
-std::experimental::optional<int64_t> FooStatic::opt_i64_id(std::experimental::optional<int64_t> oi) {
+std::optional<int64_t> FooStatic::opt_i64_id(std::optional<int64_t> oi) {
     return FooStaticImpl::opt_i64_id(oi);
 }
 
@@ -70,11 +70,11 @@ std::chrono::system_clock::time_point FooStaticImpl::date_id(const std::chrono::
     return d;
 }
 
-std::experimental::optional<std::chrono::system_clock::time_point> FooStaticImpl::opt_date_id(const std::experimental::optional<std::chrono::system_clock::time_point> & od) {
+std::optional<std::chrono::system_clock::time_point> FooStaticImpl::opt_date_id(const std::optional<std::chrono::system_clock::time_point> & od) {
     return od;
 }
 
-std::experimental::optional<int64_t> FooStaticImpl::opt_i64_id(std::experimental::optional<int64_t> oi) {
+std::optional<int64_t> FooStaticImpl::opt_i64_id(std::optional<int64_t> oi) {
     return oi;
 }
 

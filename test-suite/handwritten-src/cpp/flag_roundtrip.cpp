@@ -10,10 +10,10 @@ empty_flags FlagRoundtrip::roundtrip_empty(empty_flags flag) {
   return flag;
 }
 
-std::experimental::optional<access_flags> FlagRoundtrip::roundtrip_access_boxed(std::experimental::optional<access_flags> flag) {
+std::optional<access_flags> FlagRoundtrip::roundtrip_access_boxed(std::optional<access_flags> flag) {
   return flag;
 }
 
-std::experimental::optional<empty_flags> FlagRoundtrip::roundtrip_empty_boxed(std::experimental::optional<empty_flags> flag) {
+std::optional<empty_flags> FlagRoundtrip::roundtrip_empty_boxed(std::optional<empty_flags> flag) {
   return flag;
 }
