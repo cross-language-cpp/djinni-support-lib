@@ -37,9 +37,3 @@ cd build/test-suite
 ctest
 ```
 
-or with the Makefile shortcut:
-
-```bash
-make test
-```
-

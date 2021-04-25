@@ -31,6 +31,11 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false
 ---
 name: h
 typedef: 'record'
@@ -60,6 +65,11 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false
 ---
 name: min
 typedef: 'record'
@@ -89,6 +99,11 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false
 ---
 name: s
 typedef: 'record'
@@ -118,6 +133,11 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false
 ---
 name: ms
 typedef: 'record'
@@ -147,6 +167,11 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false
 ---
 name: us
 typedef: 'record'
@@ -176,6 +201,11 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false
 ---
 name: ns
 typedef: 'record'
@@ -205,3 +235,8 @@ jni:
   header: '"Duration-jni.hpp"'
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false

@@ -92,14 +92,14 @@ std::chrono::duration<double, std::nano> TestDuration::nanosf(double count)
     return std::chrono::duration<double, std::nano>{count};
 }
 
-std::experimental::optional<std::chrono::duration<int64_t, std::ratio<1>>> TestDuration::box(int64_t count)
+std::optional<std::chrono::duration<int64_t, std::ratio<1>>> TestDuration::box(int64_t count)
 {
     using D = std::chrono::duration<int64_t, std::ratio<1>>;
-    using O = std::experimental::optional<D>;
+    using O = std::optional<D>;
     return count < 0 ? O{} : O{D{count}};
 }
 
-int64_t TestDuration::unbox(std::experimental::optional<std::chrono::duration<int64_t, std::ratio<1>>> dt)
+int64_t TestDuration::unbox(std::optional<std::chrono::duration<int64_t, std::ratio<1>>> dt)
 {
     return dt ? dt->count() : -1;
 }

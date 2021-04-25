@@ -22,6 +22,30 @@ jobs:
       working-directory: build/check_install_root
       run: diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
 
+  build-on-osx-for-python:
+    runs-on: macos-10.15
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: asdf-vm/actions/install@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON -DDJINNI_STATIC_LIB=ON
+    - name: Build release
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
+    - name: Run tests
+      working-directory: build/test-suite
+      run: ctest -C Release -V
+
   build-on-ubuntu-for-jni:
     runs-on: ubuntu-latest
     steps:

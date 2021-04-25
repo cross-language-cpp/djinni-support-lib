@@ -30,3 +30,8 @@ jni:
   header: '"djinni/jni/Marshal.hpp"'
   typename: jobject
   typeSignature: 'Ljava/util/Date;'
+cs:
+  translator: 'coming soon'
+  header: 'coming soon'
+  typename: 'coming soon'
+  reference: false

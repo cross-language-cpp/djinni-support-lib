@@ -5,7 +5,9 @@ find_program(DJINNI_EXECUTABLE ${DJINNI_EXECUTABLE_NAMES}
   DOC "Path to the Djinni executable"
   PATHS ${DJINNI_EXECUTABLE_PATH})
 if(DJINNI_EXECUTABLE)
-  message(STATUS "Djinni executable: ${DJINNI_EXECUTABLE}")
+  execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_VERSION)
+  string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
+  message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
 else()
   message(FATAL_ERROR "Could not find DJINNI_EXECUTABLE using the following names: ${DJINNI_EXECUTABLE_NAMES}")
 endif()
@@ -152,6 +154,25 @@ function(add_djinni_target)
     OBJCPP_NAMESPACE
     OBJC_BASE_LIB_INCLUDE_PREFIX
 
+    PY_OUT
+    PY_OUT_FILES
+    PY_IMPORT_PREFIX
+    PYCFFI_OUT
+    PYCFFI_OUT_FILES
+    PYCFFI_PACKAGE_NAME
+    PYCFFI_DYNAMIC_LIB_LIST
+    C_WRAPPER_OUT
+    C_WRAPPER_OUT_FILES
+    IDENT_PY_TYPE
+    IDENT_PY_CLASS_NAME
+    IDENT_PY_TYPE_PARAM
+    IDENT_PY_METHOD
+    IDENT_PY_FIELD
+    IDENT_PY_LOCAL
+    IDENT_PY_ENUM
+    IDENT_PY_CONST
+
+
     YAML_OUT
     YAML_OUT_FILE
     YAML_PREFIX
@@ -229,6 +250,18 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--objc-extended-record-include-prefix" ${DJINNI_OBJC_EXTENDED_RECORD_INCLUDE_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--objcpp-namespace" ${DJINNI_OBJCPP_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--objc-base-lib-include-prefix" ${DJINNI_OBJC_BASE_LIB_INCLUDE_PREFIX})
+
+  append_if_defined(DJINNI_GENERATION_COMMAND "--py-import-prefix" ${DJINNI_PY_IMPORT_PREFIX})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--pycffi-package-name" ${DJINNI_PYCFFI_PACKAGE_NAME})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--pycffi-dynamic-lib-list" ${DJINNI_PYCFFI_DYNAMIC_LIB_LIST})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-type" ${DJINNI_IDENT_PY_TYPE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-class-name" ${DJINNI_IDENT_PY_CLASS_NAME})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-type-param" ${DJINNI_IDENT_PY_TYPE_PARAM})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-method" ${DJINNI_IDENT_PY_METHOD})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-field" ${DJINNI_IDENT_PY_FIELD})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-local" ${DJINNI_IDENT_PY_LOCAL})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-enum" ${DJINNI_IDENT_PY_ENUM})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-const" ${DJINNI_IDENT_PY_CONST})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
@@ -312,6 +345,54 @@ function(add_djinni_target)
       VERBATIM
     )
     set(${DJINNI_OBJCPP_OUT_FILES} ${OBJCPP_OUT_FILES} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED DJINNI_PY_OUT_FILES)
+    set(DJINNI_PY_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_PY_GENERATION_COMMAND "--py-out" ${DJINNI_PY_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_PY_GENERATION_COMMAND}" RESULT PY_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${PY_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_PY_GENERATION_COMMAND}
+      COMMENT "Generating Djinni Python bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_PY_OUT_FILES} ${PY_OUT_FILES} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED DJINNI_PYCFFI_OUT_FILES)
+    set(DJINNI_PYCFFI_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_PYCFFI_GENERATION_COMMAND "--pycffi-out" ${DJINNI_PYCFFI_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_PYCFFI_GENERATION_COMMAND}" RESULT PYCFFI_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${PYCFFI_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_PYCFFI_GENERATION_COMMAND}
+      COMMENT "Generating Djinni CFFI bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_PYCFFI_OUT_FILES} ${PYCFFI_OUT_FILES} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED DJINNI_C_WRAPPER_OUT_FILES)
+    set(DJINNI_C_WRAPPER_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_C_WRAPPER_GENERATION_COMMAND "--c-wrapper-out" ${DJINNI_C_WRAPPER_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_C_WRAPPER_GENERATION_COMMAND}" RESULT C_WRAPPER_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${C_WRAPPER_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_C_WRAPPER_GENERATION_COMMAND}
+      COMMENT "Generating Djinni C Wrapper bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_C_WRAPPER_OUT_FILES} ${C_WRAPPER_OUT_FILES} PARENT_SCOPE)
   endif()
 
 endfunction()

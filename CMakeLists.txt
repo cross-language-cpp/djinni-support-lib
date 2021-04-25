@@ -25,6 +25,14 @@ set(SRC_OBJC
   "djinni/objc/DJIProxyCaches.mm"
 )
 
+set(SRC_C_WRAPPER
+  "djinni/cwrapper/thread_local.cpp"
+  "djinni/cwrapper/thread_local.hpp"
+  "djinni/cwrapper/wrapper_marshal.cpp"
+  "djinni/cwrapper/wrapper_marshal.h"
+  "djinni/cwrapper/wrapper_marshal.hpp"
+)
+
 option(DJINNI_STATIC_LIB "Build Djinni support library as a static library instead of dynamic (the default)." off)
 if(DJINNI_STATIC_LIB)
   add_library(djinni_support_lib STATIC ${SRC_SHARED})
@@ -34,7 +42,7 @@ endif()
 source_group("" FILES ${SRC_SHARED})
 
 set_target_properties(djinni_support_lib PROPERTIES
-  CXX_STANDARD 11
+  CXX_STANDARD 17
   CXX_STANDARD_REQUIRED true
   CXX_EXTENSIONS false
 )
@@ -107,8 +115,24 @@ if(DJINNI_WITH_JNI)
   endif()
 endif()
 
-if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
-  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI must be enabled.")
+# Python support
+option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." off)
+if(DJINNI_WITH_PYTHON)
+  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
+  target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
+  source_group("cwrapper" FILES ${SRC_C_WRAPPER})
+
+  install(
+    FILES
+    "djinni/cwrapper/wrapper_marshal.h"
+    DESTINATION
+    ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
+    )
+endif()
+
+
+if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON))
+  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON must be enabled.")
 endif()
 
 
