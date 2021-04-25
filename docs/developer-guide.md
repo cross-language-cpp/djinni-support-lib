@@ -49,9 +49,6 @@ ctest
 3. Build `DjinniCppCliTest`.
 4. Run the tests: <kbd>Test</kbd> > <kbd>Run All Tests</kbd>.
 
-
-# Release process
-
 ## Release process
 
 To release a new version of the support-lib, the following steps must be followed:
