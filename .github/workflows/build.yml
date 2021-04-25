@@ -66,3 +66,32 @@ jobs:
     - name: Test if expected files have been installed
       working-directory: build/check_install_root
       run: diff -u ../../test/jni_list.txt <(du -a | tac | awk -F ' ' '{print $2}' | sort)
+
+  build-on-windows-for-cppcli:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: install djinni
+      run: |
+        $VERSION = 'v' + [regex]::Match((Get-Content .tool-versions), '^djinni (\d+.\d+.\d+)').captures.groups[1].value
+        $URL = 'https://github.com/cross-language-cpp/djinni-generator/releases/download/' + $VERSION + '/djinni.bat'
+        Invoke-WebRequest -Uri $URL -OutFile djinni.bat
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DDJINNI_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 16 2019"
+    - name: Install nuget dependencies
+      working-directory: build/test-suite
+      run: dotnet restore DjinniCppCliTest.csproj --runtime win-x64
+    - name: Build release
+      run: cmake --build build --config Release
+    - name: Run tests
+      working-directory: build/test-suite
+      run: dotnet test Release/DjinniCppCliTest.dll
+    - name: Install files
+      run: cmake --build build --config Release --target install
+    - name: List installed files
+      working-directory: build/check_install_root
+      run: Resolve-Path -Path (Get-ChildItem -Recurse).FullName -Relative
+    - name: Test if expected files have been installed
+      working-directory: build/check_install_root
+      run: if((Compare-Object (Get-Content ..\..\test\cppcli_list.txt) (Resolve-Path -Path (Get-ChildItem -Recurse).FullName -Relative))) { Write-Error "file list not equal" }
+

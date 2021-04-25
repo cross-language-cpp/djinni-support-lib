@@ -32,9 +32,9 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false
 ---
 name: h
@@ -66,9 +66,9 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration_h'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false
 ---
 name: min
@@ -100,9 +100,9 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration_min'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false
 ---
 name: s
@@ -134,9 +134,9 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration_s'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false
 ---
 name: ms
@@ -168,9 +168,9 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration_ms'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false
 ---
 name: us
@@ -202,9 +202,9 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration_us'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false
 ---
 name: ns
@@ -236,7 +236,7 @@ jni:
   typename: jobject
   typeSignature: 'Ljava/time/Duration;'
 cs:
-  translator: 'coming soon'
-  header: 'coming soon'
-  typename: 'coming soon'
+  translator: '::djinni::Duration_ns'
+  header: '"Duration-cs.hpp"'
+  typename: 'System::TimeSpan'
   reference: false

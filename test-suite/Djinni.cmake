@@ -1,16 +1,19 @@
+cmake_minimum_required(VERSION 3.18)
 
-# Resolve DJINNI_EXECUTABLE
-set(DJINNI_EXECUTABLE_NAMES "djinni")
-find_program(DJINNI_EXECUTABLE ${DJINNI_EXECUTABLE_NAMES}
-  DOC "Path to the Djinni executable"
-  PATHS ${DJINNI_EXECUTABLE_PATH})
-if(DJINNI_EXECUTABLE)
-  execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_VERSION)
-  string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
-  message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
+# find Djinni executable.
+# On windows find_program() does not work for finding the `djinni.bat` script.
+# The script must either be on the PATH or `DJINNI_EXECUTABLE` must explicitly be predefined.
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+  if(NOT DEFINED CACHE{DJINNI_EXECUTABLE})
+    set(DJINNI_EXECUTABLE djinni.bat CACHE FILEPATH "path of djinni binary")
+  endif()
 else()
-  message(FATAL_ERROR "Could not find DJINNI_EXECUTABLE using the following names: ${DJINNI_EXECUTABLE_NAMES}")
+  find_program(DJINNI_EXECUTABLE djinni REQUIRED)
 endif()
+
+execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_VERSION)
+string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
+message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
 
 
 macro(append_if_defined LIST OPTION)
@@ -43,8 +46,7 @@ macro(resolve_djinni_inputs)
     message(FATAL_ERROR ${DJINNI_STDERR})
   endif()
 
-  file(READ ${DJINNI_INPUTS_TXT} ${DJINNI_RESULT})
-  string(REGEX REPLACE "\n" ";" ${DJINNI_RESULT} ${${DJINNI_RESULT}})
+  file(STRINGS ${DJINNI_INPUTS_TXT} ${DJINNI_RESULT})
 endmacro()
 
 macro(resolve_djinni_outputs)
@@ -53,6 +55,7 @@ macro(resolve_djinni_outputs)
   cmake_parse_arguments(DJINNI "" "${SINGLE_VALUE}" "${MULTI_VALUE}" "${ARGN}")
 
   set(DJINNI_OUTPUTS_TXT "${CMAKE_CURRENT_BINARY_DIR}/${DJINNI_RESULT}.txt")
+
   execute_process(
     COMMAND ${DJINNI_COMMAND} "--skip-generation" "true" "--list-out-files" "${DJINNI_OUTPUTS_TXT}"
     RESULT_VARIABLE DJINNI_CONFIGURATION_RESULT
@@ -63,9 +66,7 @@ macro(resolve_djinni_outputs)
     message(FATAL_ERROR ${DJINNI_STDERR})
   endif()
 
-  file(READ ${DJINNI_OUTPUTS_TXT} FILE_CONTENTS)
-  file(READ ${DJINNI_OUTPUTS_TXT} ${DJINNI_RESULT})
-  string(REGEX REPLACE "\n" ";" ${DJINNI_RESULT} ${${DJINNI_RESULT}})
+  file(STRINGS ${DJINNI_OUTPUTS_TXT} ${DJINNI_RESULT})
 endmacro()
 
 
@@ -173,6 +174,12 @@ function(add_djinni_target)
     IDENT_PY_CONST
 
 
+    CPPCLI_OUT
+    CPPCLI_OUT_FILES
+    CPPCLI_NAMESPACE
+    CPPCLI_INCLUDE_CPP_PREFIX
+    CPPCLI_BASE_LIB_INCLUDE_PREFIX
+
     YAML_OUT
     YAML_OUT_FILE
     YAML_PREFIX
@@ -262,6 +269,10 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-local" ${DJINNI_IDENT_PY_LOCAL})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-enum" ${DJINNI_IDENT_PY_ENUM})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-py-const" ${DJINNI_IDENT_PY_CONST})
+
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-namespace" ${DJINNI_CPPCLI_NAMESPACE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-include-cpp-prefix" ${DJINNI_CPPCLI_INCLUDE_CPP_PREFIX})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-base-lib-include-prefix" ${DJINNI_CPPCLI_BASE_LIB_INCLUDE_PREFIX})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
@@ -393,6 +404,22 @@ function(add_djinni_target)
       VERBATIM
     )
     set(${DJINNI_C_WRAPPER_OUT_FILES} ${C_WRAPPER_OUT_FILES} PARENT_SCOPE)
+  endif()
+
+  if(DEFINED DJINNI_CPPCLI_OUT_FILES)
+    set(DJINNI_CPPCLI_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_CPPCLI_GENERATION_COMMAND "--cppcli-out" ${DJINNI_CPPCLI_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_CPPCLI_GENERATION_COMMAND}" RESULT CPPCLI_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${CPPCLI_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_CPPCLI_GENERATION_COMMAND}
+      COMMENT "Generating Djinni C++/CLI bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_CPPCLI_OUT_FILES} ${CPPCLI_OUT_FILES} PARENT_SCOPE)
   endif()
 
 endfunction()
