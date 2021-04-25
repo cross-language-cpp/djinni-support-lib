@@ -256,7 +256,7 @@ if(DJINNI_WITH_PYTHON)
     COMMENT "Building CFFI lib"
     VERBATIM
   )
- 
+
   add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
     ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
   )
