@@ -162,9 +162,7 @@ public:
         }
     }
 
-    // Only ProxyCache<Traits>::get_base() can allocate these objects.
     Pimpl() = default;
-
 private:
     struct KeyHash {
         std::size_t operator()(const Key & k) const {
