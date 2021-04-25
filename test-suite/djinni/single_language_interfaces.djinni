@@ -5,7 +5,7 @@ cs_only_listener = interface +s {}
 
 # Generating and compiling this makes sure other languages don't break
 # on references to interfaces they don't need.
-uses_single_language_listeners = interface +o +j +c +p +s {
+uses_single_language_listeners = interface +o +j +c +s {
   callForObjC(l: objc_only_listener);
   returnForObjC(): objc_only_listener;
   callForJava(l: java_only_listener);
