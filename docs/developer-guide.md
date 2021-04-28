@@ -39,7 +39,7 @@ cd build/test-suite
 ctest
 ```
 
-#### C#
+#### C++/CLI
 
 1. Generate Visual Studio Solution with `-G "Visual Studio 16 2019"`:
     ```sh
