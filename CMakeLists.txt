@@ -49,11 +49,14 @@ set(SRC_CPPCLI
   "djinni/cppcli/WrapperCache.cpp"
 )
 
-option(DJINNI_STATIC_LIB "Build Djinni support library as a static library instead of dynamic (the default)." off)
-if(DJINNI_STATIC_LIB)
-  add_library(djinni_support_lib STATIC ${SRC_SHARED})
+if(DEFINED DJINNI_STATIC_LIB)
+  if(DJINNI_STATIC_LIB)
+    add_library(djinni_support_lib STATIC ${SRC_SHARED})
+  else()
+    add_library(djinni_support_lib SHARED ${SRC_SHARED})
+  endif()
 else()
-  add_library(djinni_support_lib SHARED ${SRC_SHARED})
+  add_library(djinni_support_lib ${SRC_SHARED})
 endif()
 
 add_library(djinni-support-lib::djinni-support-lib ALIAS djinni_support_lib)
