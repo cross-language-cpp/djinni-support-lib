@@ -55,6 +55,9 @@ if(DJINNI_STATIC_LIB)
 else()
   add_library(djinni_support_lib SHARED ${SRC_SHARED})
 endif()
+
+add_library(djinni-support-lib::djinni-support-lib ALIAS djinni_support_lib)
+
 source_group("" FILES ${SRC_SHARED})
 
 set_target_properties(djinni_support_lib PROPERTIES
@@ -183,8 +186,9 @@ if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH
   message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI must be enabled.")
 endif()
 
+option(DJINNI_BUILD_TESTING "Build tests" ON)
 
 include(CTest)
-if (BUILD_TESTING)
+if (BUILD_TESTING AND DJINNI_BUILD_TESTING)
   add_subdirectory(test-suite)
 endif()

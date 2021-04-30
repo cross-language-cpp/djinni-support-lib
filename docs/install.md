@@ -1,12 +1,80 @@
 # Installing the Support-Lib
 
-## Conan
+## CMake
+
+### Embedded
+
+To embed the library directly into an existing CMake project, place the entire source tree in a subdirectory and call
+`add_subdirectory()` in your `CMakeLists.txt` file:
+
+```cmake
+project(foo)
+
+# build as static library.
+set(DJINNI_STATIC_LIB ON CACHE INTERNAL "")
+# disable tests
+set(DJINNI_BUILD_TESTING OFF CACHE INTERNAL "")
+
+# choose for which target language the djinni-support-lib should be compiled.
+# At least one of the following options must be set to true:
+# DJINNI_WITH_JNI, DJINNI_WITH_OBJC, DJINNI_WITH_PYTHON, DJINNI_WITH_CPPCLI
+# In this example the target language depends on the target system:
+if(ANDROID)
+    set(DJINNI_WITH_JNI ON CACHE INTERNAL "")
+elseif(CMAKE_SYSTEM_NAME IN_LIST "Darwin;iOS")
+    set(DJINNI_WITH_OBJC ON CACHE INTERNAL "")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(DJINNI_WITH_CPPCLI ON CACHE INTERNAL "")
+endif()
+
+add_subdirectory(thirdparty/djinni-support-lib)
+
+add_library(foo ...)
+
+target_link_libraries(foo PRIVATE djinni-support-lib::djinni-support-lib)
+```
+
+### Embedded (FetchContent)
+
+[FetchContent](https://cmake.org/cmake/help/v3.14/module/FetchContent.html) can be used to automatically download the repository as a dependency at configuration time.
+
+```cmake
+cmake_minimum_required(VERSION 3.14)
+include(FetchContent)
+
+project(foo)
+
+FetchContent_Declare(djinni-support-lib
+  GIT_REPOSITORY https://github.com/cross-language-cpp/djinni-support-lib.git
+  GIT_TAG v0.1.1)
+
+# set options for djinni-support-lib
+set(DJINNI_STATIC_LIB ON CACHE INTERNAL "")
+set(DJINNI_BUILD_TESTING OFF CACHE INTERNAL "")
+if(ANDROID)
+    set(DJINNI_WITH_JNI ON CACHE INTERNAL "")
+elseif(CMAKE_SYSTEM_NAME IN_LIST "Darwin;iOS")
+    set(DJINNI_WITH_OBJC ON CACHE INTERNAL "")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(DJINNI_WITH_CPPCLI ON CACHE INTERNAL "")
+endif()
+
+FetchContent_MakeAvailable(djinni-support-lib)
+
+add_library(foo ...)
+
+target_link_libraries(foo PRIVATE djinni-support-lib::djinni-support-lib)
+```
+
+## Package Managers
+
+### Conan
 
 The library is available at [conan-center](https://conan.io/center/djinni-support-lib):
 
 ```text
 [requires]
-djinni-support-lib/0.1.0
+djinni-support-lib/0.1.1
 ```
 
 ### Options
