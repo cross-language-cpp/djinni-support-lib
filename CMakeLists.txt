@@ -49,15 +49,22 @@ set(SRC_CPPCLI
   "djinni/cppcli/WrapperCache.cpp"
 )
 
-if(DEFINED DJINNI_STATIC_LIB)
-  if(DJINNI_STATIC_LIB)
-    add_library(djinni_support_lib STATIC ${SRC_SHARED})
+# The target type of the library can be defined by setting `DJINNI_STATIC_LIB`.
+# If `DJINNI_STATIC_LIB` is not defined, the default CMake flag `BUILD_SHARED_LIBS` is followed.
+if(NOT DEFINED DJINNI_STATIC_LIB)
+  if(BUILD_SHARED_LIBS)
+    set(DJINNI_STATIC_LIB OFF)
   else()
-    add_library(djinni_support_lib SHARED ${SRC_SHARED})
+    set(DJINNI_STATIC_LIB ON)
   endif()
-else()
-  add_library(djinni_support_lib ${SRC_SHARED})
 endif()
+
+if(DJINNI_STATIC_LIB)
+  add_library(djinni_support_lib STATIC ${SRC_SHARED})
+else()
+  add_library(djinni_support_lib SHARED ${SRC_SHARED})
+endif()
+
 
 add_library(djinni-support-lib::djinni-support-lib ALIAS djinni_support_lib)
 
