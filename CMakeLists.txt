@@ -107,6 +107,8 @@ if(DJINNI_WITH_JNI)
   if(DJINNI_JNI_WITH_MAIN)
     list(APPEND SRC_JNI "djinni/jni/djinni_main.cpp")
   endif()
+  set_target_properties(djinni_support_lib PROPERTIES
+    POSITION_INDEPENDENT_CODE ON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_JNI})
   source_group("jni" FILES ${SRC_JNI})
