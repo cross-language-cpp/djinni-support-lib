@@ -49,23 +49,9 @@ set(SRC_CPPCLI
   "djinni/cppcli/WrapperCache.cpp"
 )
 
-# The target type of the library can be defined by setting `DJINNI_STATIC_LIB`.
-# If `DJINNI_STATIC_LIB` is not defined, the default CMake flag `BUILD_SHARED_LIBS` is followed.
-if(NOT DEFINED DJINNI_STATIC_LIB)
-  if(BUILD_SHARED_LIBS)
-    set(DJINNI_STATIC_LIB OFF)
-  else()
-    set(DJINNI_STATIC_LIB ON)
-  endif()
-endif()
-
-if(DJINNI_STATIC_LIB)
-  add_library(djinni_support_lib STATIC ${SRC_SHARED})
-else()
-  add_library(djinni_support_lib SHARED ${SRC_SHARED})
-endif()
-
-
+# set `DJINNI_LIBRARY_TYPE` to `STATIC` or `SHARED` to define the type of library.
+# If undefined, the type will be determined based on `BUILD_SHARED_LIBS`
+add_library(djinni_support_lib ${DJINNI_LIBRARY_TYPE} ${SRC_SHARED})
 add_library(djinni-support-lib::djinni-support-lib ALIAS djinni_support_lib)
 
 source_group("" FILES ${SRC_SHARED})
@@ -76,7 +62,6 @@ set_target_properties(djinni_support_lib PROPERTIES
   CXX_EXTENSIONS false
 )
 
-
 install(
   TARGETS djinni_support_lib
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -84,13 +69,10 @@ install(
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-
 install(
   FILES ${SRC_SHARED}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/djinni/
 )
-
-
 
 # Objective-C support
 option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." off)
@@ -110,11 +92,9 @@ if(DJINNI_WITH_OBJC)
       ${CMAKE_INSTALL_INCLUDEDIR}/djinni/objc
   )
 
-  if (NOT DJINNI_STATIC_LIB)
-    target_link_libraries(djinni_support_lib
-      "-framework Foundation"
-    )
-  endif()
+  target_link_libraries(djinni_support_lib PUBLIC
+    "-framework Foundation"
+  )
 
 endif()
 
@@ -133,10 +113,10 @@ if(DJINNI_WITH_JNI)
 
   install(
     FILES
-    "djinni/jni/djinni_support.hpp"
-    "djinni/jni/Marshal.hpp"
+      "djinni/jni/djinni_support.hpp"
+      "djinni/jni/Marshal.hpp"
     DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}/djinni/jni
+      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/jni
     )
 
   # Do not use the host's jni.h on Android as it is provided automatically by the NDK
@@ -155,9 +135,9 @@ if(DJINNI_WITH_PYTHON)
 
   install(
     FILES
-    "djinni/cwrapper/wrapper_marshal.h"
+      "djinni/cwrapper/wrapper_marshal.h"
     DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
+      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
     )
 endif()
 
@@ -166,10 +146,6 @@ if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
     message(FATAL_ERROR "Enabling DJINNI_WITH_CPPCLI without MSVC is not supported")
-  endif()
-
-  if(NOT DJINNI_STATIC_LIB)
-    message(FATAL_ERROR "DJINNI_WITH_CPPCLI requires DJINNI_STATIC_LIB to be true")
   endif()
 
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/support-lib/cppcli/>")

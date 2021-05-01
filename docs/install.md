@@ -11,7 +11,7 @@ To embed the library directly into an existing CMake project, place the entire s
 project(foo)
 
 # build as static library.
-set(DJINNI_STATIC_LIB ON CACHE INTERNAL "")
+set(DJINNI_LIBRARY_TYPE STATIC CACHE INTERNAL "")
 # disable tests
 set(DJINNI_BUILD_TESTING OFF CACHE INTERNAL "")
 
@@ -46,10 +46,10 @@ project(foo)
 
 FetchContent_Declare(djinni-support-lib
   GIT_REPOSITORY https://github.com/cross-language-cpp/djinni-support-lib.git
-  GIT_TAG v0.1.1)
+  GIT_TAG v1.0.0)
 
 # set options for djinni-support-lib
-set(DJINNI_STATIC_LIB ON CACHE INTERNAL "")
+set(DJINNI_LIBRARY_TYPE STATIC CACHE INTERNAL "")
 set(DJINNI_BUILD_TESTING OFF CACHE INTERNAL "")
 if(ANDROID)
     set(DJINNI_WITH_JNI ON CACHE INTERNAL "")
@@ -74,7 +74,7 @@ The library is available at [conan-center](https://conan.io/center/djinni-suppor
 
 ```text
 [requires]
-djinni-support-lib/0.1.1
+djinni-support-lib/1.0.0
 ```
 
 ### Options
