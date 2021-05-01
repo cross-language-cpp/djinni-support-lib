@@ -7,7 +7,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DDJINNI_STATIC_LIB=ON -G Xcode
+      run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -G Xcode
     - name: Build release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - name: Run tests
@@ -52,7 +52,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DDJINNI_STATIC_LIB=ON
+      run: cmake -S . -B build -DDJINNI_WITH_JNI=ON
     - name: Build release
       run: cmake --build build --parallel $(nproc) --config Release
     - name: Run tests
@@ -77,7 +77,7 @@ jobs:
         $URL = 'https://github.com/cross-language-cpp/djinni-generator/releases/download/' + $VERSION + '/djinni.bat'
         Invoke-WebRequest -Uri $URL -OutFile djinni.bat
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DDJINNI_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 16 2019"
+      run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 16 2019"
     - name: Install nuget dependencies
       working-directory: build/test-suite
       run: dotnet restore DjinniCppCliTest.csproj --runtime win-x64

@@ -147,7 +147,7 @@ if(DJINNI_WITH_JNI)
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
     ${JNI_INCLUDE_DIRS}
   )
-  target_link_libraries(DjinniTestNative PUBLIC djinni_support_lib)
+  target_link_libraries(DjinniTestNative PUBLIC djinni-support-lib::djinni-support-lib)
 
   find_package(Java REQUIRED)
   include(UseJava)
@@ -201,7 +201,7 @@ if(DJINNI_WITH_OBJC)
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc
   )
-  target_link_libraries(DjinniObjcTest PUBLIC djinni_support_lib)
+  target_link_libraries(DjinniObjcTest PUBLIC djinni-support-lib::djinni-support-lib)
 
   xctest_add_bundle(DjinniObjcTestTests DjinniObjcTest ${OBJC_TEST_SRCS})
   target_include_directories(DjinniObjcTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/objc/impl)
@@ -232,7 +232,7 @@ if(DJINNI_WITH_PYTHON)
     ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/pycpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp
   )
-  target_link_libraries(mylib PUBLIC djinni_support_lib)
+  target_link_libraries(mylib PUBLIC djinni-support-lib::djinni-support-lib)
 
   # Prepare Python 3 environment
   find_package(PythonInterp "3" REQUIRED)
@@ -278,7 +278,7 @@ if(DJINNI_WITH_CPPCLI)
     VS_DOTNET_REFERENCES "System;System.Core"
     COMMON_LANGUAGE_RUNTIME ""
   )
-  target_link_libraries(DjinniCppCli PUBLIC djinni_support_lib)
+  target_link_libraries(DjinniCppCli PUBLIC djinni-support-lib::djinni-support-lib)
 
   add_library(DjinniCppCliTest SHARED
     handwritten-src/cs/ClientInterfaceImpl.cs

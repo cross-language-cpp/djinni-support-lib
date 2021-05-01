@@ -1,5 +1,13 @@
 site_name: djinni-support-lib
+markdown_extensions:
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - admonition
+theme:
+  name: material
 nav:
   - install.md
-  - developer-guide.md
   - python-support.md
+  - developer-guide.md

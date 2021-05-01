@@ -23,8 +23,8 @@
 #include <string>
 #include <vector>
 
-#include "../proxy_cache_interface.hpp"
-#include "../djinni_common.hpp"
+#include "djinni/proxy_cache_interface.hpp"
+#include "djinni/djinni_common.hpp"
 #include <jni.h>
 
 /*
