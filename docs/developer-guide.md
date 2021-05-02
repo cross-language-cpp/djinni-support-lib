@@ -39,7 +39,7 @@ cd build/test-suite
 ctest
 ```
 
-#### C#
+#### C++/CLI
 
 1. Generate Visual Studio Solution with `-G "Visual Studio 16 2019"`:
     ```sh
@@ -48,6 +48,19 @@ ctest
 2. Open the solution `djinni_support_lib.sln` in Visual Studio.
 3. Build `DjinniCppCliTest`.
 4. Run the tests: <kbd>Test</kbd> > <kbd>Run All Tests</kbd>.
+
+## Preview Documentation
+
+The documentation in `docs` will be rendered as a part of [djinni.xlcpp.dev](https://djinni.xlcpp.dev/).
+
+You can preview how the docs will look like:
+
+```sh
+# install required dependencies
+pip install -r mkdocs-requirements.txt
+# render a live preview of the docs under http://127.0.0.1:8000
+mkdocs serve 
+```
 
 ## Release process
 
