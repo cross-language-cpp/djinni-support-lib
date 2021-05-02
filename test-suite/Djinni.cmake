@@ -105,6 +105,7 @@ function(add_djinni_target)
     JNI_INCLUDE_CPP_PREFIX
     JNI_NAMESPACE
     JNI_BASE_LIB_INCLUDE_PREFIX
+    JNI_GENERATE_MAIN
     IDENT_JNI_CLASS
     IDENT_JNI_FILE
 
@@ -233,6 +234,7 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-include-cpp-prefix" ${DJINNI_JNI_INCLUDE_CPP_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-namespace" ${DJINNI_JNI_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-base-lib-include-prefix" ${DJINNI_JNI_BASE_LIB_INCLUDE_PREFIX})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--jni-generate-main" ${DJINNI_JNI_GENERATE_MAIN})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-jni-class" ${DJINNI_IDENT_JNI_CLASS})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-jni-file" ${DJINNI_IDENT_JNI_FILE})
 

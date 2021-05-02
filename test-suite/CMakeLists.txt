@@ -67,6 +67,7 @@ add_djinni_target(DjinniWCharTests
   JAVA_NONNULL_ANNOTATION "javax.annotation.Nonnull"
   IDENT_JAVA_FIELD "mFooBar"
   JNI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/jni"
+  JNI_GENERATE_MAIN false
   IDENT_JNI_CLASS "NativeFooBar"
   IDENT_JNI_FILE "NativeFooBar"
   OBJC_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc"
