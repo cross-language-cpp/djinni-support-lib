@@ -1,5 +1,6 @@
 //
 // Copyright 2014 Dropbox, Inc.
+// Copyright 2021 cross-language-cpp
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,9 +14,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
-// This provides a minimal JNI_OnLoad and JNI_OnUnload implementation - include it if your
-// app doesn't use JNI except through Djinni.
+// This provides a minimal JNI_OnLoad and JNI_OnUnload implementation.
+// Don't include it if your library does require a custom JNI_OnLoad implementation with custom initialization logic.
+#pragma once
 
 #include "djinni_support.hpp"
 

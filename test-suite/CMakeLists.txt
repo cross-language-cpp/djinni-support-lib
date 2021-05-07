@@ -67,6 +67,7 @@ add_djinni_target(DjinniWCharTests
   JAVA_NONNULL_ANNOTATION "javax.annotation.Nonnull"
   IDENT_JAVA_FIELD "mFooBar"
   JNI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/jni"
+  JNI_GENERATE_MAIN false
   IDENT_JNI_CLASS "NativeFooBar"
   IDENT_JNI_FILE "NativeFooBar"
   OBJC_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc"
@@ -133,10 +134,7 @@ source_group("generated-objcpp" FILES ${WCHAR_OBJCPP_GENERATED_SRCS})
 source_group("generated-yaml"   FILES ${WCHAR_YAML_GENERATED_SRCS})
 
 if(DJINNI_WITH_JNI)
-  file(GLOB_RECURSE SUPPORT_LIB_JNI_SRCS "${CMAKE_SOURCE_DIR}/djinni/jni/*")
-
   add_library(DjinniTestNative SHARED
-    ${SUPPORT_LIB_JNI_SRCS}
     ${JNI_GENERATED_SRCS}
     ${CPP_GENERATED_SRCS}
     ${WCHAR_JNI_GENERATED_SRCS}
@@ -150,6 +148,7 @@ if(DJINNI_WITH_JNI)
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
     ${JNI_INCLUDE_DIRS}
   )
+  target_link_libraries(DjinniTestNative PUBLIC djinni-support-lib::djinni-support-lib)
 
   find_package(Java REQUIRED)
   include(UseJava)

@@ -6,6 +6,7 @@
 ./usr/local/include/djinni/djinni_common.hpp
 ./usr/local/include/djinni/jni
 ./usr/local/include/djinni/jni/Marshal.hpp
+./usr/local/include/djinni/jni/djinni_jni_main.hpp
 ./usr/local/include/djinni/jni/djinni_support.hpp
 ./usr/local/include/djinni/proxy_cache_impl.hpp
 ./usr/local/include/djinni/proxy_cache_interface.hpp

@@ -20,6 +20,8 @@ set(SRC_JNI
   "djinni/jni/djinni_support.hpp"
   "djinni/jni/Marshal.hpp"
   "djinni/jni/djinni_support.cpp"
+  "djinni/jni/djinni_jni_main.hpp"
+  "djinni/jni/djinni_jni_main.cpp"
 )
 
 set(SRC_OBJC
@@ -62,7 +64,6 @@ set_target_properties(djinni_support_lib PROPERTIES
   CXX_EXTENSIONS false
 )
 
-
 install(
   TARGETS djinni_support_lib
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -70,13 +71,10 @@ install(
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-
 install(
   FILES ${SRC_SHARED}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/djinni/
 )
-
-
 
 # Objective-C support
 option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." off)
@@ -104,11 +102,9 @@ target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_
 
 # JNI support
 option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." off)
-option(DJINNI_JNI_WITH_MAIN "Include the default minimal JNI_OnLoad and JNI_OnUnload implementation in Djinni support library." on)
 if(DJINNI_WITH_JNI)
-  if(DJINNI_JNI_WITH_MAIN)
-    list(APPEND SRC_JNI "djinni/jni/djinni_main.cpp")
-  endif()
+  set_target_properties(djinni_support_lib PROPERTIES
+    POSITION_INDEPENDENT_CODE ON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_JNI})
   source_group("jni" FILES ${SRC_JNI})
@@ -117,6 +113,7 @@ if(DJINNI_WITH_JNI)
     FILES
       "djinni/jni/djinni_support.hpp"
       "djinni/jni/Marshal.hpp"
+      "djinni/jni/djinni_jni_main.hpp"
     DESTINATION
       ${CMAKE_INSTALL_INCLUDEDIR}/djinni/jni
     )
