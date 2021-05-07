@@ -203,7 +203,6 @@ if(DJINNI_WITH_OBJC)
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc
   )
   target_link_libraries(DjinniObjcTest PUBLIC djinni-support-lib::djinni-support-lib)
-
   xctest_add_bundle(DjinniObjcTestTests DjinniObjcTest ${OBJC_TEST_SRCS})
   target_include_directories(DjinniObjcTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/objc/impl)
 

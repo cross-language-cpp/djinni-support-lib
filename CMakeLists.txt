@@ -94,9 +94,7 @@ if(DJINNI_WITH_OBJC)
       ${CMAKE_INSTALL_INCLUDEDIR}/djinni/objc
   )
 
-  target_link_libraries(djinni_support_lib PUBLIC
-    "-framework Foundation"
-  )
+  target_link_libraries(djinni_support_lib PUBLIC "-framework Foundation")
 
 endif()
 

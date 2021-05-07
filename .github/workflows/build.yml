@@ -39,7 +39,7 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON -DDJINNI_STATIC_LIB=ON
+      run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON
     - name: Build release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - name: Run tests
