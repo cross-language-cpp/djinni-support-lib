@@ -23,7 +23,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(DJINNI_WITH_CPPCLI ON CACHE INTERNAL "")
 endif()
 add_subdirectory(thirdparty/djinni-support-lib)
+
 add_library(foo ...)
+
 target_link_libraries(foo PRIVATE djinni-support-lib::djinni-support-lib)
 ```
 
@@ -35,6 +37,7 @@ target_link_libraries(foo PRIVATE djinni-support-lib::djinni-support-lib)
 cmake_minimum_required(VERSION 3.14)
 include(FetchContent)
 project(foo)
+
 FetchContent_Declare(djinni-support-lib
   GIT_REPOSITORY https://github.com/cross-language-cpp/djinni-support-lib.git
   GIT_TAG v1.0.0)
@@ -48,7 +51,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(DJINNI_WITH_CPPCLI ON CACHE INTERNAL "")
 endif()
 FetchContent_MakeAvailable(djinni-support-lib)
+
 add_library(foo ...)
+
 target_link_libraries(foo PRIVATE djinni-support-lib::djinni-support-lib)
 ```
 
@@ -63,11 +68,11 @@ The library is available at [conan-center](https://conan.io/center/djinni-suppor
 djinni-support-lib/1.0.0
 ```
 
-### Options
+#### Options
 
 | Option | Values | Description |
 | ------ | ------ | ----------- |
 | `shared` | `True`, `False` | Wether to build as shared library. Default: `False` |
 | `fPIC` | `True`, `False` | Default: `True`. Follows the default Conan behaviour. |
 | `target` | `jni`, `objc`, `python`, `cppcli`, `auto` | The library has different targets for usage with Java, Objective-C, Python or C++/CLI. By default (`auto`) the target is determined automatically depending on the target OS (`iOS` → `objc`, `Android` → `jni`, `Windows` → `cppcli`). Set this explicitly if you want to build for `macOS`/`Windows`/`Linux`, because on these platforms multiple targets may be a valid option! |
-| `system_java` | `True`, `False` | The library needs to link against the JNI (Java Native Interface) if `target` is `jni`. By default (`True`), `zulu-openjdk/11.0.8` will be installed from conan center for this. Set to `False` to use the systems Java installation instead.  |
+| `system_java` | `True`, `False` | Wether `zulu-openjdk/11.0.8` should be installed from conan center if `target=jni`. Set to `True` to use the system JDK. (Default: `False`, Android: `True`)   |
