@@ -49,12 +49,11 @@ set(SRC_CPPCLI
   "djinni/cppcli/WrapperCache.cpp"
 )
 
-option(DJINNI_STATIC_LIB "Build Djinni support library as a static library instead of dynamic (the default)." off)
-if(DJINNI_STATIC_LIB)
-  add_library(djinni_support_lib STATIC ${SRC_SHARED})
-else()
-  add_library(djinni_support_lib SHARED ${SRC_SHARED})
-endif()
+# set `DJINNI_LIBRARY_TYPE` to `STATIC` or `SHARED` to define the type of library.
+# If undefined, the type will be determined based on `BUILD_SHARED_LIBS`
+add_library(djinni_support_lib ${DJINNI_LIBRARY_TYPE} ${SRC_SHARED})
+add_library(djinni-support-lib::djinni-support-lib ALIAS djinni_support_lib)
+
 source_group("" FILES ${SRC_SHARED})
 
 set_target_properties(djinni_support_lib PROPERTIES
@@ -97,11 +96,7 @@ if(DJINNI_WITH_OBJC)
       ${CMAKE_INSTALL_INCLUDEDIR}/djinni/objc
   )
 
-  if (NOT DJINNI_STATIC_LIB)
-    target_link_libraries(djinni_support_lib
-      "-framework Foundation"
-    )
-  endif()
+  target_link_libraries(djinni_support_lib PUBLIC "-framework Foundation")
 
 endif()
 
@@ -120,10 +115,10 @@ if(DJINNI_WITH_JNI)
 
   install(
     FILES
-    "djinni/jni/djinni_support.hpp"
-    "djinni/jni/Marshal.hpp"
+      "djinni/jni/djinni_support.hpp"
+      "djinni/jni/Marshal.hpp"
     DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}/djinni/jni
+      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/jni
     )
 
   # Do not use the host's jni.h on Android as it is provided automatically by the NDK
@@ -142,9 +137,9 @@ if(DJINNI_WITH_PYTHON)
 
   install(
     FILES
-    "djinni/cwrapper/wrapper_marshal.h"
+      "djinni/cwrapper/wrapper_marshal.h"
     DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
+      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
     )
 endif()
 
@@ -153,10 +148,6 @@ if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
     message(FATAL_ERROR "Enabling DJINNI_WITH_CPPCLI without MSVC is not supported")
-  endif()
-
-  if(NOT DJINNI_STATIC_LIB)
-    message(FATAL_ERROR "DJINNI_WITH_CPPCLI requires DJINNI_STATIC_LIB to be true")
   endif()
 
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/support-lib/cppcli/>")
@@ -183,8 +174,9 @@ if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH
   message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI must be enabled.")
 endif()
 
+option(DJINNI_BUILD_TESTING "Build tests" ON)
 
 include(CTest)
-if (BUILD_TESTING)
+if (BUILD_TESTING AND DJINNI_BUILD_TESTING)
   add_subdirectory(test-suite)
 endif()
