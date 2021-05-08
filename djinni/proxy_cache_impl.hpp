@@ -18,7 +18,6 @@
 
 #include "proxy_cache_interface.hpp"
 #include <functional>
-#include <mutex>
 #include <unordered_map>
 
 #ifdef __cplusplus_cli
