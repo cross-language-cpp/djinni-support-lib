@@ -141,6 +141,7 @@ if(DJINNI_WITH_PYTHON)
 endif()
 
 option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
+option(DJINNI_CPPCLI_NETCORE "Configure the C++/CLI bindings for .Net Core instead of .Net Framework." off)
 if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
@@ -150,10 +151,20 @@ if(DJINNI_WITH_CPPCLI)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/support-lib/cppcli/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_CPPCLI})
   source_group("cppcli" FILES ${SRC_CPPCLI})
-  set_target_properties(djinni_support_lib PROPERTIES
-    VS_DOTNET_REFERENCES "System;System.Core"
-    COMMON_LANGUAGE_RUNTIME ""
-  )
+  if(DJINNI_CPPCLI_NETCORE)
+    set_target_properties(djinni_support_lib PROPERTIES
+      COMMON_LANGUAGE_RUNTIME "netcore"
+      DOTNET_TARGET_FRAMEWORK "netcoreapp3.1"
+      COMPILE_FLAGS "/EHa"
+      VS_GLOBAL_CLRSupport "netcore"
+      )
+  else()
+    set_target_properties(djinni_support_lib PROPERTIES
+      VS_DOTNET_REFERENCES "System;System.Core"
+      COMMON_LANGUAGE_RUNTIME ""
+    )
+  endif()
+
 
   install(
     FILES
