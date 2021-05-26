@@ -101,6 +101,7 @@ djinni::Handle<DjinniPythonExceptionHandle> djinni::cw_default_get_py_exception(
         return ExceptionState::newHandle(s_djinni_create_py_from_cpp_exception(e_mesg.release()));
     }
     assert(false);
+    return {}; //avoid compiler warning not returning anything
 }
 
 // The argument is an exception_ptr for either a std::exception or a subclass of std::exception called py_exception
