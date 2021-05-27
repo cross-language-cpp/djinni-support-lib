@@ -147,6 +147,10 @@ if(DJINNI_WITH_CPPCLI)
     message(FATAL_ERROR "Enabling DJINNI_WITH_CPPCLI without MSVC is not supported")
   endif()
 
+  if(DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON)
+    message(FATAL_ERROR "DJINNI_WITH_CPPCLI can not be used with other bindings enabled.")
+  endif()
+
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/support-lib/cppcli/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_CPPCLI})
   source_group("cppcli" FILES ${SRC_CPPCLI})
