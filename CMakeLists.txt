@@ -120,8 +120,11 @@ if(DJINNI_WITH_JNI)
 
   # Do not use the host's jni.h on Android as it is provided automatically by the NDK
   if(NOT ANDROID)
+    # avoid error messages if awt is not found, what seems to be on some sytems sometimes the case
+    set(JAVA_AWT_LIBRARY NotNeeded)
+    set(JAVA_AWT_INCLUDE_PATH NotNeeded)
     find_package(JNI REQUIRED QUIET)
-    target_include_directories(djinni_support_lib PUBLIC "${JNI_INCLUDE_DIRS}")
+    target_include_directories(djinni_support_lib PUBLIC ${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2})
   endif()
 endif()
 
