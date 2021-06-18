@@ -71,6 +71,8 @@ install(
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
+set_property(TARGET djinni_support_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 install(
   FILES ${SRC_SHARED}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/djinni/
@@ -131,10 +133,11 @@ if(DJINNI_WITH_PYTHON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
   source_group("cwrapper" FILES ${SRC_C_WRAPPER})
-
+  # these files might be delivered in future per default
   install(
     FILES
       "djinni/cwrapper/wrapper_marshal.h"
+      "djinni/cwrapper/wrapper_marshal.hpp"
     DESTINATION
       ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
     )
