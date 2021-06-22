@@ -103,14 +103,13 @@ target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_
 # JNI support
 option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." OFF)
 
-option (JNI_CPP_THREAD_ATTACH "Add code enableing calling from C++ thread to Java (experimental)" OFF)
-
 if(DJINNI_WITH_JNI)
   set_target_properties(djinni_support_lib PROPERTIES
     POSITION_INDEPENDENT_CODE ON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_JNI})
   source_group("jni" FILES ${SRC_JNI})
+  option (JNI_CPP_THREAD_ATTACH "Add code enableing calling from C++ thread to Java (experimental)" OFF)
   if (JNI_CPP_THREAD_ATTACH)
     target_compile_definitions(djinni_support_lib PRIVATE EXPERIMENTAL_AUTO_CPP_THREAD_ATTACH)
   endif()
