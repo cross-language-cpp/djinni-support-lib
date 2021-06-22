@@ -134,7 +134,7 @@ if(DJINNI_WITH_JNI)
 endif()
 
 # Python support
-option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." off)
+option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." OFF)
 if(DJINNI_WITH_PYTHON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
@@ -149,7 +149,7 @@ if(DJINNI_WITH_PYTHON)
     )
 endif()
 
-option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
+option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." OFF)
 if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
