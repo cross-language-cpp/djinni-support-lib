@@ -1,5 +1,5 @@
 //
-// Copyright 2014 Dropbox, Inc.
+// Copyright 2021 cross-language-cpp
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,18 +14,20 @@
 // limitations under the License.
 //
 
-// This provides a minimal JNI_OnLoad and JNI_OnUnload implementation - include it if your
-// app doesn't use JNI except through Djinni.
+#include "Error.hpp"
 
-#include "djinni_support.hpp"
+namespace djinni {
 
-// Called when library is loaded by the first class which uses it.
-CJNIEXPORT jint JNICALL JNI_OnLoad(JavaVM * jvm, void * /*reserved*/) {
-    djinni::jniInit(jvm);
-    return JNI_VERSION_1_6;
+void ThrowUnimplemented(const char *, const char * msg) {
+    throw gcnew System::NotImplementedException(msclr::interop::marshal_as<System::String^>(msg));
 }
 
-// (Potentially) called when library is about to be unloaded.
-CJNIEXPORT void JNICALL JNI_OnUnload(JavaVM * /*jvm*/, void * /*reserved*/) {
-    djinni::jniShutdown();
+void ThrowNativeExceptionFromCurrent(const char *) {
+    try {
+        throw;
+    } catch (const std::exception & e) {
+        throw gcnew System::Exception(msclr::interop::marshal_as<System::String^>(e.what()));
+    }
+}
+
 }
