@@ -75,7 +75,7 @@ JNIEnv * jniGetThreadEnv() {
     jint get_res = g_cachedJVM->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
     #ifdef EXPERIMENTAL_AUTO_CPP_THREAD_ATTACH
     if (get_res == JNI_EDETACHED) {
-        get_res = g_cachedJVM->AttachCurrentThread(&env, nullptr);
+        get_res = g_cachedJVM->AttachCurrentThread(reinterpret_cast<void**>(&env), nullptr);
         thread_local struct DetachOnExit {
             ~DetachOnExit() {
                 g_cachedJVM->DetachCurrentThread();
@@ -608,13 +608,13 @@ void jniDefaultSetPendingFromCurrentImpl(JNIEnv * env) {
 }
 
 void jniDefaultSetPendingFromCurrent(JNIEnv * env, const char * /*ctx*/) noexcept {
- 
+
     /* It is necessary to go through a layer of indirection here because this
-    function is marked noexcept, but the implementation may still throw. 
-    Any exceptions which are not caught (i.e. exceptions which aren't 
+    function is marked noexcept, but the implementation may still throw.
+    Any exceptions which are not caught (i.e. exceptions which aren't
     std::exception subclasses) will result in a call to terminate() since this
     function is marked noexcept */
-	
+
 	jniDefaultSetPendingFromCurrentImpl(env);
 }
 

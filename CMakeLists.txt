@@ -77,7 +77,7 @@ install(
 )
 
 # Objective-C support
-option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." off)
+option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." OFF)
 if(DJINNI_WITH_OBJC)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/objc/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_OBJC})
@@ -101,13 +101,18 @@ endif()
 target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
 
 # JNI support
-option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." off)
+option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library." OFF)
+
 if(DJINNI_WITH_JNI)
   set_target_properties(djinni_support_lib PROPERTIES
     POSITION_INDEPENDENT_CODE ON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_JNI})
   source_group("jni" FILES ${SRC_JNI})
+  option (JNI_CPP_THREAD_ATTACH "Add code enabling calling from C++ thread to Java (experimental)" OFF)
+  if (JNI_CPP_THREAD_ATTACH)
+    target_compile_definitions(djinni_support_lib PRIVATE EXPERIMENTAL_AUTO_CPP_THREAD_ATTACH)
+  endif()
 
   install(
     FILES
@@ -129,7 +134,7 @@ if(DJINNI_WITH_JNI)
 endif()
 
 # Python support
-option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." off)
+option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." OFF)
 if(DJINNI_WITH_PYTHON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
@@ -144,7 +149,7 @@ if(DJINNI_WITH_PYTHON)
     )
 endif()
 
-option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." off)
+option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." OFF)
 if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
