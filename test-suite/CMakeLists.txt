@@ -236,11 +236,18 @@ if(DJINNI_WITH_PYTHON)
 
   # Prepare Python 3 environment
   find_package(PythonInterp "3" REQUIRED)
-  string(JOIN ":" PYTHONPATH
+  if (WIN32) # TODO, obviously that is not optimal
+    string(JOIN ";" PYTHONPATH
     "${CMAKE_SOURCE_DIR}/djinni/py"
     "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
     $ENV{PYTHONPATH})
-
+  else()
+    string(JOIN ":" PYTHONPATH
+      "${CMAKE_SOURCE_DIR}/djinni/py"
+      "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
+      $ENV{PYTHONPATH})
+  endif()
+  # TODO , we still do not find mylib, since it lands in a Debug subfolder of the current binary dir
   # Compile Python extension module (CFFI)
   set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
   list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
