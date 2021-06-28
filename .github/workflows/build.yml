@@ -81,8 +81,6 @@ jobs:
       run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON
     - name: Build release
       run: cmake --build build --parallel $(nproc) --config Release
-      env:
-        LIBRARY_PATH: ./build/test-suite/
     - name: Run tests
       working-directory: build/test-suite
       run: ctest -C Release -V
