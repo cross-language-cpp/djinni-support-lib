@@ -67,6 +67,25 @@ jobs:
       working-directory: build/check_install_root
       run: diff -u ../../test/jni_list.txt <(du -a | tac | awk -F ' ' '{print $2}' | sort)
 
+
+  build-on-ubuntu-for-python:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: asdf-vm/actions/install@v1
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON
+    - name: Build release
+      run: cmake --build build --parallel $(nproc) --config Release
+    - name: Run tests
+      working-directory: build/test-suite
+      run: ctest -C Release -V
+
+
   build-on-windows-for-cppcli:
     runs-on: windows-latest
     steps:
