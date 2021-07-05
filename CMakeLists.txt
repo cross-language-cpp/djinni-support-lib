@@ -34,8 +34,6 @@ set(SRC_OBJC
 )
 
 set(SRC_C_WRAPPER
-  "djinni/cwrapper/thread_local.cpp"
-  "djinni/cwrapper/thread_local.hpp"
   "djinni/cwrapper/wrapper_marshal.cpp"
   "djinni/cwrapper/wrapper_marshal.h"
   "djinni/cwrapper/wrapper_marshal.hpp"
@@ -136,6 +134,8 @@ endif()
 # Python support
 option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." OFF)
 if(DJINNI_WITH_PYTHON)
+  set_target_properties(djinni_support_lib PROPERTIES
+    POSITION_INDEPENDENT_CODE ON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
   source_group("cwrapper" FILES ${SRC_C_WRAPPER})

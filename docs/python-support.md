@@ -37,3 +37,22 @@ the other side.
 * The support library code makes direct reference to <optional> types rather than respecting the
 command-line choice of a different optional library.
 
+
+## Python support on Windows not complete yet
+
+If you want help development of that feature, please download the current generator for Windows and place it in the root folder.
+
+Generate the cmake project: 
+
+```
+cmake -S . -B build/py -DDJINNI_WITH_PYTHON=ON -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 16 2019"
+```
+
+
+Run the build
+
+```
+cmake --build build/py
+```
+
+Explore the error. Help will be welcome! 

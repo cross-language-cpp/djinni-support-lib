@@ -3,10 +3,11 @@
 
 #include <stdio.h> // for debugging
 #include "wrapper_marshal.hpp"
-#include "thread_local.hpp"
+
 #include "../djinni_common.hpp"
 #include <string>
 #include <iostream> // for debugging
+#include <thread>
 
 using namespace djinni;
 using namespace djinni::optionals;
@@ -57,11 +58,11 @@ struct ExceptionState {
 };
 
 // Current exception state
-static djinni::support_lib::ThreadLocal<ExceptionState> s_exception_state;
+static thread_local ExceptionState s_exception_state;
 
 // to be called from Python
 void djinni_create_and_set_cpp_from_py_exception(DjinniPythonExceptionHandle * py_e_handle) {
-    s_exception_state.get().handle = ExceptionState::newHandle(py_e_handle);
+    s_exception_state.handle = ExceptionState::newHandle(py_e_handle);
 }
 
 void _djinni_add_callback_create_py_from_cpp_exception(CreateExceptionFnPtr fct_ptr) {
@@ -82,7 +83,7 @@ void djinni::cw_throw_exception(djinni::Handle<DjinniPythonExceptionHandle> e_ha
 
 // to be called from cpp to allow cpp impl to know about pyhton exception
 void djinni::cw_throw_if_pending() {
-    auto e_handle = s_exception_state.get().takeException();
+    auto e_handle = s_exception_state.takeException();
 
     if (e_handle) {
         cw_throw_exception(std::move(e_handle));
@@ -115,12 +116,12 @@ djinni::Handle<DjinniPythonExceptionHandle> djinni::cw_get_py_exception(const st
 // notice an exception was thrown
 // The argument is an exception_ptr for either a std::exception or a subclass of std::exception called py_exception
 void djinni::cw_set_pending_exception(const std::exception_ptr & e_ptr) {
-    s_exception_state.get().handle = cw_get_py_exception(e_ptr);
+    s_exception_state.handle = cw_get_py_exception(e_ptr);
 }
 
 DjinniPythonExceptionHandle * djinni_from_python_check_and_clear_exception() {
-    if (s_exception_state.get().handle) {
-        return s_exception_state.get().takeException().release();
+    if (s_exception_state.handle) {
+        return s_exception_state.takeException().release();
     }
     return nullptr;
 }

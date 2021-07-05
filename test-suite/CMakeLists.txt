@@ -17,8 +17,6 @@ add_djinni_target(DjinniAllTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "\"optional\""
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   JAVA_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/java"
@@ -54,8 +52,6 @@ add_djinni_target(DjinniWCharTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "\"optional\""
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   CPP_USE_WIDE_STRINGS
@@ -98,9 +94,6 @@ add_djinni_target(DjinniPyTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "\"optional\""
-
   PY_OUT_FILES         PYTHON_GENERATED_SRCS
   PYCFFI_OUT_FILES     PYCFFI_GENERATED_SRCS
   C_WRAPPER_OUT_FILES  C_WRAPPER_GENERATED_SRCS
@@ -236,16 +229,24 @@ if(DJINNI_WITH_PYTHON)
 
   # Prepare Python 3 environment
   find_package(PythonInterp "3" REQUIRED)
-  string(JOIN ":" PYTHONPATH
+  if (WIN32)
+    message(WARNING "Python support on Windwos is not fully implemented, for more details visit https://github.com/cross-language-cpp/djinni-support-lib/issues")
+    string(JOIN $<SEMICOLON> PYTHONPATH
     "${CMAKE_SOURCE_DIR}/djinni/py"
     "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
     $ENV{PYTHONPATH})
-
+  else()
+    string(JOIN ":" PYTHONPATH
+      "${CMAKE_SOURCE_DIR}/djinni/py"
+      "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
+      $ENV{PYTHONPATH})
+  endif()
+  
   # Compile Python extension module (CFFI)
   set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
   list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
   add_custom_target(PyCFFIlib_cffi ALL
-    ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${PYTHON_EXECUTABLE}
+    ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} LIBRARY_PATH=$<TARGET_FILE_DIR:mylib> ${PYTHON_EXECUTABLE}
         ${PYCFFI_GENERATED_SRCS}
         ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
         ${C_WRAPPER_GENERATED_HEADERS}
@@ -253,6 +254,7 @@ if(DJINNI_WITH_PYTHON)
     DEPENDS mylib ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS} ${C_WRAPPER_GENERATED_HEADERS}
     COMMENT "Building CFFI lib"
     VERBATIM
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:mylib>
   )
 
   add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
