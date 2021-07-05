@@ -240,7 +240,7 @@ if(DJINNI_WITH_PYTHON)
       "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
       $ENV{PYTHONPATH})
   endif()
-  # TODO , we still do not find mylib, since it lands in a Debug subfolder of the current binary dir
+  
   # Compile Python extension module (CFFI)
   set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
   list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
