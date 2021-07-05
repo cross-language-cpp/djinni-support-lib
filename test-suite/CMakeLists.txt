@@ -17,8 +17,6 @@ add_djinni_target(DjinniAllTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "\"optional\""
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   JAVA_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/java"
@@ -54,8 +52,6 @@ add_djinni_target(DjinniWCharTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "\"optional\""
   CPP_EXTENDED_RECORD_INCLUDE_PREFIX "test-suite/handwritten-src/cpp/"
   CPP_ENUM_HASH_WORKAROUND
   CPP_USE_WIDE_STRINGS
@@ -98,9 +94,6 @@ add_djinni_target(DjinniPyTests
   CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp"
   CPP_NAMESPACE "testsuite"
   IDENT_CPP_ENUM_TYPE "foo_bar"
-  CPP_OPTIONAL_TEMPLATE "std::optional"
-  CPP_OPTIONAL_HEADER "\"optional\""
-
   PY_OUT_FILES         PYTHON_GENERATED_SRCS
   PYCFFI_OUT_FILES     PYCFFI_GENERATED_SRCS
   C_WRAPPER_OUT_FILES  C_WRAPPER_GENERATED_SRCS
