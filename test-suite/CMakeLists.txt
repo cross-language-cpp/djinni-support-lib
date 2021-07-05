@@ -230,6 +230,7 @@ if(DJINNI_WITH_PYTHON)
   # Prepare Python 3 environment
   find_package(PythonInterp "3" REQUIRED)
   if (WIN32)
+    message(WARNING "Python support on Windwos is not fully implemented, for more details visit https://github.com/cross-language-cpp/djinni-support-lib/issues")
     string(JOIN $<SEMICOLON> PYTHONPATH
     "${CMAKE_SOURCE_DIR}/djinni/py"
     "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
