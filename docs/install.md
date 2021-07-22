@@ -75,8 +75,8 @@ djinni-support-lib/1.1.0
 | `shared` | `True`, `False` | Wether to build as shared library. Default: `False` |
 | `fPIC` | `True`, `False` | Default: `True`. Follows the default Conan behaviour. |
 | `target` | `deprecated` | *Do not use the target option anymore! It exists just to stay compatible to old versions of the recipe and will be removed.* |
-| `with_jni` | `True, False, auto` | Default: `auto`. Wether to build JNI bindings or not. Auto means True for Android builds, False for other platforms. |
-| `with_objc` | `True, False, auto` | Default: `auto`. Wether to build Objective-C bindings or not. Auto means True for any MacOS build, False false other platforms. |
-| `with_python` | `True, False, auto` | Default: `auto`. Wether to build Python bindings or not. Auto means False. |
-| `with_cppcli` | `True, False, auto` | Default: `auto`. Wether to build C++/CLI bindings or not. Auto means True on Windows, False otherwise. |
+| `with_jni` | `True`, `False`, `auto` | Default: `auto`. Wether to build JNI bindings or not. `auto` means `True` for Android builds, `False` for other platforms. |
+| `with_objc` | `True`, `False`, `auto` | Default: `auto`. Wether to build Objective-C bindings or not. `auto` means `True` for any Darwin platform (iOS, macOS, ...), `False` false other platforms. |
+| `with_python` | `True`, `False`, `auto` | Default: `auto`. Wether to build Python bindings or not. `auto` means `False`. |
+| `with_cppcli` | `True`, `False`, `auto` | Default: `auto`. Wether to build C++/CLI bindings or not. `auto` means `True` on Windows, `False` otherwise. |
 | `system_java` | `True`, `False` | Wether `zulu-openjdk/11.0.8` should be installed from conan center if `target=jni`. Set to `True` to use the system JDK. (Default: `False`, Android: `True`)   |
