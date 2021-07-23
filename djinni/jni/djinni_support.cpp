@@ -75,7 +75,7 @@ JNIEnv * jniGetThreadEnv() {
     jint get_res = g_cachedJVM->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
     #ifdef EXPERIMENTAL_AUTO_CPP_THREAD_ATTACH
     if (get_res == JNI_EDETACHED) {
-        get_res = g_cachedJVM->AttachCurrentThread(reinterpret_cast<void**>(&env), nullptr);
+        get_res = g_cachedJVM->AttachCurrentThread(&env, nullptr);
         thread_local struct DetachOnExit {
             ~DetachOnExit() {
                 g_cachedJVM->DetachCurrentThread();
