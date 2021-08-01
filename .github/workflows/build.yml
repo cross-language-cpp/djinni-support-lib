@@ -67,6 +67,18 @@ jobs:
       working-directory: build/check_install_root
       run: diff -u ../../test/jni_list.txt <(du -a | tac | awk -F ' ' '{print $2}' | sort)
 
+  build-on-ubuntu-for-jni-with-thread-attach:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: asdf-vm/actions/install@v1
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DJNI_CPP_THREAD_ATTACH=ON -DCMAKE_BUILD_TYPE=Release
+    - name: Build release
+      run: cmake --build build --parallel $(nproc)
+    - name: Run tests
+      working-directory: build/test-suite
+      run: ctest -C Release -V
 
   build-on-ubuntu-for-python:
     runs-on: ubuntu-latest
