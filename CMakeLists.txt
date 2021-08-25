@@ -105,9 +105,8 @@ if(DJINNI_WITH_JNI)
     POSITION_INDEPENDENT_CODE ON)
   target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   # if this is a dynamic lib, we must have a main function in the lib
-  if ("${DJINNI_LIBRARY_TYPE}" STREQUAL "SHARED" )
-    list(APPEND SRC_JNI "djinni/jni/djinni_jni_main.cpp")
-  elseif(NOT "${DJINNI_LIBRARY_TYPE}" STREQUAL "STATIC" AND BUILD_SHARED_LIBS)
+  if ("${DJINNI_LIBRARY_TYPE}" STREQUAL "SHARED" OR
+     (NOT "${DJINNI_LIBRARY_TYPE}" STREQUAL "STATIC" AND BUILD_SHARED_LIBS))
     list(APPEND SRC_JNI "djinni/jni/djinni_jni_main.cpp")
   endif()
   target_sources(djinni_support_lib PRIVATE ${SRC_JNI})
