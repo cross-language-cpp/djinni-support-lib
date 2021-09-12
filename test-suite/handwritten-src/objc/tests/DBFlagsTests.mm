@@ -9,7 +9,7 @@
 #import "DBAccessFlags.h"
 #import "DBEmptyFlags.h"
 #import "DBFlagRoundtrip.h"
-#import "DJIMarshal+Private.h"
+#import "djinni/objc/DJIMarshal+Private.h"
 
 #include "access_flags.hpp"
 #include "empty_flags.hpp"
