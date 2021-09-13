@@ -104,7 +104,6 @@ function(add_djinni_target)
     JNI_INCLUDE_PREFIX
     JNI_INCLUDE_CPP_PREFIX
     JNI_NAMESPACE
-    JNI_BASE_LIB_INCLUDE_PREFIX
     JNI_GENERATE_MAIN
     IDENT_JNI_CLASS
     IDENT_JNI_FILE
@@ -154,7 +153,6 @@ function(add_djinni_target)
     CPP_EXTENDED_RECORD_INCLUDE_PREFIX
     OBJC_EXTENDED_RECORD_INCLUDE_PREFIX
     OBJCPP_NAMESPACE
-    OBJC_BASE_LIB_INCLUDE_PREFIX
 
     PY_OUT
     PY_OUT_FILES
@@ -179,7 +177,6 @@ function(add_djinni_target)
     CPPCLI_OUT_FILES
     CPPCLI_NAMESPACE
     CPPCLI_INCLUDE_CPP_PREFIX
-    CPPCLI_BASE_LIB_INCLUDE_PREFIX
 
     YAML_OUT
     YAML_OUT_FILE
@@ -233,7 +230,6 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-include-prefix" ${DJINNI_JNI_INCLUDE_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-include-cpp-prefix" ${DJINNI_JNI_INCLUDE_CPP_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-namespace" ${DJINNI_JNI_NAMESPACE})
-  append_if_defined(DJINNI_GENERATION_COMMAND "--jni-base-lib-include-prefix" ${DJINNI_JNI_BASE_LIB_INCLUDE_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--jni-generate-main" ${DJINNI_JNI_GENERATE_MAIN})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-jni-class" ${DJINNI_IDENT_JNI_CLASS})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ident-jni-file" ${DJINNI_IDENT_JNI_FILE})
@@ -258,7 +254,6 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--cpp-extended-record-include-prefix" ${DJINNI_CPP_EXTENDED_RECORD_INCLUDE_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--objc-extended-record-include-prefix" ${DJINNI_OBJC_EXTENDED_RECORD_INCLUDE_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--objcpp-namespace" ${DJINNI_OBJCPP_NAMESPACE})
-  append_if_defined(DJINNI_GENERATION_COMMAND "--objc-base-lib-include-prefix" ${DJINNI_OBJC_BASE_LIB_INCLUDE_PREFIX})
 
   append_if_defined(DJINNI_GENERATION_COMMAND "--py-import-prefix" ${DJINNI_PY_IMPORT_PREFIX})
   append_if_defined(DJINNI_GENERATION_COMMAND "--pycffi-package-name" ${DJINNI_PYCFFI_PACKAGE_NAME})
@@ -274,7 +269,6 @@ function(add_djinni_target)
 
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-namespace" ${DJINNI_CPPCLI_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-include-cpp-prefix" ${DJINNI_CPPCLI_INCLUDE_CPP_PREFIX})
-  append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-base-lib-include-prefix" ${DJINNI_CPPCLI_BASE_LIB_INCLUDE_PREFIX})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})

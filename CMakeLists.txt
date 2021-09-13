@@ -76,7 +76,6 @@ install(
 # Objective-C support
 option(DJINNI_WITH_OBJC "Include the Objective-C support code in Djinni support library." OFF)
 if(DJINNI_WITH_OBJC)
-  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/objc/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_OBJC})
   source_group("objc" FILES ${SRC_OBJC})
   target_compile_options(djinni_support_lib PUBLIC "-fobjc-arc")
@@ -103,7 +102,6 @@ option(DJINNI_WITH_JNI "Include the JNI support code in Djinni support library."
 if(DJINNI_WITH_JNI)
   set_target_properties(djinni_support_lib PROPERTIES
     POSITION_INDEPENDENT_CODE ON)
-  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/jni/>")
   # if this is a dynamic lib, we must have a main function in the lib
   if ("${DJINNI_LIBRARY_TYPE}" STREQUAL "SHARED" OR
      (NOT "${DJINNI_LIBRARY_TYPE}" STREQUAL "STATIC" AND BUILD_SHARED_LIBS))
@@ -140,7 +138,6 @@ option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support lib
 if(DJINNI_WITH_PYTHON)
   set_target_properties(djinni_support_lib PROPERTIES
     POSITION_INDEPENDENT_CODE ON)
-  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cwrapper/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
   source_group("cwrapper" FILES ${SRC_C_WRAPPER})
   # these files might be delivered in future per default
@@ -164,7 +161,6 @@ if(DJINNI_WITH_CPPCLI)
     message(FATAL_ERROR "DJINNI_WITH_CPPCLI can not be used with other bindings enabled.")
   endif()
 
-  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/cppcli/>")
   target_sources(djinni_support_lib PRIVATE ${SRC_CPPCLI})
   source_group("cppcli" FILES ${SRC_CPPCLI})
   set_target_properties(djinni_support_lib PROPERTIES

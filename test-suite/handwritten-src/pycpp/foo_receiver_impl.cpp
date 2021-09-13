@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <optional>
-#include "wrapper_marshal.hpp"
+#include "djinni/cwrapper/wrapper_marshal.hpp"
 #include "foo_listener_bf_impl.hpp"
 #include "foo_receiver_impl.hpp"
 #include "foo_some_other_record.hpp"
