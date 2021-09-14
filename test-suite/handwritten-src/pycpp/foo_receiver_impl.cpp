@@ -86,7 +86,7 @@ void FooReceiverImpl::cause_cpp_exception(const std::string & s) {
 void FooReceiverImpl::cause_py_exception(const std::string & s) {
     try {
         m_listener->cause_py_exception(std::move(s));
-    } catch (djinni::py_exception & e) {
+    } catch (djinni::front_end_exception & e) {
         throw std::move(e);
     }
 }
@@ -94,7 +94,7 @@ void FooReceiverImpl::cause_py_exception(const std::string & s) {
 void FooReceiverImpl::cause_zero_division_error() {
     try {
         m_listener->cause_zero_division_error();
-    } catch (djinni::py_exception & e) {
+    } catch (djinni::front_end_exception & e) {
         throw std::move(e);
     }
 }

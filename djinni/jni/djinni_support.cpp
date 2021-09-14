@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-#include "../djinni_common.hpp"
+#include "djinni/djinni_common.hpp"
 #include "djinni_support.hpp"
-#include "../proxy_cache_impl.hpp"
+#include "djinni/proxy_cache_impl.hpp"
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
