@@ -4,3 +4,4 @@ build/*
 .idea/
 cmake-build-debug/
 check_install_root/
+.vscode/
