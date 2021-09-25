@@ -229,19 +229,22 @@ if(DJINNI_WITH_PYTHON)
 
   # Prepare Python 3 environment
   find_package(PythonInterp "3" REQUIRED)
+  if (WIN32) # should be propably not only for python
+    set(PLATFORM_PATH_DELIMITER $<SEMICOLON>)
+  else()
+    set(PLATFORM_PATH_DELIMITER ":")
+  endif()
+    
   if (WIN32)
     message(WARNING "Python support on Windwos is not fully implemented, for more details visit https://github.com/cross-language-cpp/djinni-support-lib/issues")
-    string(JOIN $<SEMICOLON> PYTHONPATH
-    "${CMAKE_SOURCE_DIR}/djinni/py"
-    "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
-    $ENV{PYTHONPATH})
-  else()
-    string(JOIN ":" PYTHONPATH
-      "${CMAKE_SOURCE_DIR}/djinni/py"
-      "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
-      $ENV{PYTHONPATH})
   endif()
-  
+
+  string(JOIN ${PLATFORM_PATH_DELIMITER} PYTHONPATH
+    "${CMAKE_SOURCE_DIR}/djinni/py/src"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
+    $ENV{PYTHONPATH}
+  )
+
   # Compile Python extension module (CFFI)
   set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
   list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
