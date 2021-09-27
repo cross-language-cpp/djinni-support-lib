@@ -1,6 +1,6 @@
 # Part of support library for djinni4python, handwritten
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+
 from PyCFFIlib_cffi import ffi, lib
 from djinni.support import encoded_utf_8
 import datetime
