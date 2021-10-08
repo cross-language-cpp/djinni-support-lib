@@ -48,9 +48,13 @@ set(SRC_CPPCLI
   "djinni/cppcli/WrapperCache.cpp"
 )
 
+set(SRC_CPP_JSON
+  "djinni/cpp/json/nlohmann/json+extension.hpp"
+)
+
 # set `DJINNI_LIBRARY_TYPE` to `STATIC` or `SHARED` to define the type of library.
 # If undefined, the type will be determined based on `BUILD_SHARED_LIBS`
-add_library(djinni_support_lib ${DJINNI_LIBRARY_TYPE} ${SRC_SHARED})
+add_library(djinni_support_lib ${DJINNI_LIBRARY_TYPE} ${SRC_SHARED} ${SRC_CPP_JSON})
 add_library(djinni-support-lib::djinni-support-lib ALIAS djinni_support_lib)
 
 source_group("" FILES ${SRC_SHARED})
@@ -69,7 +73,7 @@ install(
 )
 
 install(
-  FILES ${SRC_SHARED}
+  FILES ${SRC_SHARED} ${SRC_CPP_JSON}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/djinni/
 )
 
