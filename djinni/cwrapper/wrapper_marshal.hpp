@@ -9,6 +9,7 @@
 #include <thread>
 #include <assert.h>
 #include <optional>
+#include <memory>
 
 #ifdef __cplusplus
 extern "C" {
