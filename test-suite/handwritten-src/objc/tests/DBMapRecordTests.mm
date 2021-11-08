@@ -3,7 +3,6 @@
 #import "DBMapListRecord+Private.h"
 #import "DBMapListRecord.h"
 #import <XCTest/XCTest.h>
-
 #include "map_record.hpp"
 
 using namespace testsuite;
@@ -85,9 +84,9 @@ using namespace testsuite;
 {
     XCTAssertEqual([objcMap count], (NSUInteger)3, @"Count 3 expected, actual: %lu", (unsigned long)[objcMap count]);
     // Must test with exact NSNumber constructor as used in DJIMarshal otherwise NSNumber comparison fails on x86_64 simulator devices
-    XCTAssertEqual([objcMap objectForKey:@"String1"], @((int64_t)1), @"\"String1 -> 1\" expected");
-    XCTAssertEqual([objcMap objectForKey:@"String2"], @((int64_t)2), @"\"String2 -> 2\" expected");
-    XCTAssertEqual([objcMap objectForKey:@"String3"], @((int64_t)3), @"\"String3 -> 3\" expected");
+    XCTAssertTrue([[objcMap objectForKey:@"String1"] isEqualTo:@((int64_t)1)], @"\"String1 -> 1\" expected");
+    XCTAssertTrue([[objcMap objectForKey:@"String2"] isEqualTo:@((int64_t)2)], @"\"String2 -> 2\" expected");
+    XCTAssertTrue([[objcMap objectForKey:@"String3"] isEqualTo:@((int64_t)3)], @"\"String3 -> 3\" expected");
 }
 
 - (std::unordered_map<std::string, int64_t>)getCppMap
