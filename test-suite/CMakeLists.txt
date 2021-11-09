@@ -236,7 +236,7 @@ if(DJINNI_WITH_PYTHON)
   endif()
     
   if (WIN32)
-    message(WARNING "Python support on Windwos is not fully implemented, for more details visit https://github.com/cross-language-cpp/djinni-support-lib/issues")
+    message(WARNING "Python support on Windows is not fully implemented, for more details visit https://github.com/cross-language-cpp/djinni-support-lib/issues")
   endif()
 
   string(JOIN ${PLATFORM_PATH_DELIMITER} PYTHONPATH
