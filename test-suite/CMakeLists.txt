@@ -229,7 +229,7 @@ if(DJINNI_WITH_PYTHON)
 
   # Prepare Python 3 environment
   find_package(PythonInterp "3" REQUIRED)
-  if (WIN32) # should be propably not only for python
+  if (WIN32) # should be probably not only for python
     set(PLATFORM_PATH_DELIMITER $<SEMICOLON>)
   else()
     set(PLATFORM_PATH_DELIMITER ":")
