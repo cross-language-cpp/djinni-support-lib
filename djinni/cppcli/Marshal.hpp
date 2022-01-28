@@ -149,6 +149,9 @@ template<class T>
 struct IsRef<T^> : std::true_type {};
 
 template<class T>
+struct IsRef<array<T>^> : std::true_type {};
+
+template<class T>
 struct CsOptional {
     typedef System::Nullable<T> type;
 };
@@ -157,6 +160,12 @@ template<class T>
 struct CsOptional<T^> {
     typedef T^ type;
 };
+
+template<class T>
+struct CsOptional<array<T>^> {
+    typedef array<T>^ type;
+};
+
 
 template<template<class> class OptionalType, class T>
 struct Optional {
