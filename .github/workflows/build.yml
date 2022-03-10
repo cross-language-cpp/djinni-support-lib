@@ -136,7 +136,7 @@ jobs:
     - name: Report cmake version
       run: cmake --version        
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 16 2019"
+      run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 17 2022"
     - name: Install nuget dependencies
       working-directory: build/test-suite
       run: dotnet restore DjinniCppCliTest.csproj --runtime win-x64
