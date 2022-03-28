@@ -2,7 +2,7 @@ name: build-all-configs
 on: [push, pull_request]
 jobs:
   build-on-osx-for-objectiveC:
-    runs-on: macos-10.15
+    runs-on: macos-11
     steps:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
@@ -25,10 +25,10 @@ jobs:
       run: diff -u ../../test/objc_list.txt <(du -a | tail -r | awk -F ' ' '{print $2}')
 
   build-on-osx-for-python:
-    runs-on: macos-10.15
+    runs-on: macos-11
     strategy:
       matrix:
-        python-version: [3.6, 3.9] # oldest and newest, rest assumed to work
+        python-version: ["3.7.12", "3.10.4"] # oldest and newest, rest assumed to work
     steps:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
@@ -36,12 +36,12 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install Python dependencies
+      uses: py-actions/py-dependency-install@v3
+      with:
+        path: "requirements.txt"
     - name: Report cmake version
-      run: cmake --version        
+      run: cmake --version
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON
     - name: Build release
@@ -56,7 +56,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Report cmake version
-      run: cmake --version    
+      run: cmake --version
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_JNI=ON
     - name: Build release
@@ -79,7 +79,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Report cmake version
-      run: cmake --version    
+      run: cmake --version
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DJNI_CPP_THREAD_ATTACH=ON -DCMAKE_BUILD_TYPE=Release
     - name: Build release
@@ -98,7 +98,7 @@ jobs:
       with:
         version: 1.10.2
     - name: Report cmake version
-      run: cmake --version        
+      run: cmake --version
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_JNI=ON -DJNI_CPP_THREAD_ATTACH=ON -DCMAKE_BUILD_TYPE=Release -DJINNI_BUILD_TESTING=OFF -DCMAKE_TOOLCHAIN_FILE=${ANDROID_SDK_ROOT}/ndk/$(ls ${ANDROID_SDK_ROOT}/ndk -C1 | sort -r | head -1)/build/cmake/android.toolchain.cmake -DANDROID_PLATFORM=android-26 -DANDROID_NATIVE_API_LEVEL=26 -DANDROID_ABI=armeabi-v7a -G Ninja
     - name: Build release
@@ -110,11 +110,11 @@ jobs:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+      uses: py-actions/py-dependency-install@v3
+      with:
+        path: "requirements.txt"
     - name: Report cmake version
-      run: cmake --version        
+      run: cmake --version
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON
     - name: Build release
@@ -134,7 +134,7 @@ jobs:
         $URL = 'https://github.com/cross-language-cpp/djinni-generator/releases/download/' + $VERSION + '/djinni.bat'
         Invoke-WebRequest -Uri $URL -OutFile djinni.bat
     - name: Report cmake version
-      run: cmake --version        
+      run: cmake --version
     - name: Configure cmake
       run: cmake -S . -B build -DDJINNI_WITH_CPPCLI=ON -DCMAKE_INSTALL_PREFIX=build/check_install_root -DDJINNI_EXECUTABLE="$(((Get-Location).Path) -replace "\\","/")/djinni.bat" -G "Visual Studio 17 2022"
     - name: Install nuget dependencies
