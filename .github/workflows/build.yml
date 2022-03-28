@@ -28,7 +28,7 @@ jobs:
     runs-on: macos-11
     strategy:
       matrix:
-        python-version: [3.7, 3.10] # oldest and newest, rest assumed to work
+        python-version: ["3.7.12", "3.10.4"] # oldest and newest, rest assumed to work
     steps:
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
