@@ -40,7 +40,7 @@ project(foo)
 
 FetchContent_Declare(djinni-support-lib
   GIT_REPOSITORY https://github.com/cross-language-cpp/djinni-support-lib.git
-  GIT_TAG v1.2.0)
+  GIT_TAG v1.2.1)
 # set options for djinni-support-lib
 set(DJINNI_BUILD_TESTING OFF CACHE INTERNAL "")
 if(ANDROID)
@@ -65,7 +65,7 @@ The library is available at [conan-center](https://conan.io/center/djinni-suppor
 
 ```text
 [requires]
-djinni-support-lib/1.2.0
+djinni-support-lib/1.2.1
 ```
 
 #### Options
