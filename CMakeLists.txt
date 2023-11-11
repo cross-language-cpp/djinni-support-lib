@@ -48,6 +48,11 @@ set(SRC_CPPCLI
   "djinni/cppcli/WrapperCache.cpp"
 )
 
+set(SRC_WASM
+  "djinni/wasm/djinni_wasm.hpp"
+  "djinni/wasm/djinni_wasm.cpp"
+)
+
 # set `DJINNI_LIBRARY_TYPE` to `STATIC` or `SHARED` to define the type of library.
 # If undefined, the type will be determined based on `BUILD_SHARED_LIBS`
 add_library(djinni_support_lib ${DJINNI_LIBRARY_TYPE} ${SRC_SHARED})
@@ -151,13 +156,14 @@ if(DJINNI_WITH_PYTHON)
 endif()
 
 option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." OFF)
+option(DJINNI_WITH_WASM "Include the WASM/TS support code in Djinni support library." OFF)
 if(DJINNI_WITH_CPPCLI)
 
   if(NOT MSVC)
     message(FATAL_ERROR "Enabling DJINNI_WITH_CPPCLI without MSVC is not supported")
   endif()
 
-  if(DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON)
+  if(DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_WASM)
     message(FATAL_ERROR "DJINNI_WITH_CPPCLI can not be used with other bindings enabled.")
   endif()
 
@@ -180,8 +186,24 @@ if(DJINNI_WITH_CPPCLI)
   )
 endif()
 
-if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_CPPCLI))
-  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI must be enabled.")
+if(DJINNI_WITH_WASM)
+
+  if(DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_CPPCLI)
+    message(FATAL_ERROR "DJINNI_WITH_WASM can not be used with other bindings enabled.")
+  endif()
+
+  target_sources(djinni_support_lib PRIVATE ${SRC_WASM})
+  source_group("wasm", FILES ${SRC_WASM})
+  install(
+    FILES
+      "djinni/wasm/djinni_wasm.hpp"
+    DESTINATION
+      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/wasm
+  )
+endif()
+
+if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_CPPCLI OR DJINNI_WITH_WASM))
+  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI or DJINNI_WITH_WASM must be enabled.")
 endif()
 
 option(DJINNI_BUILD_TESTING "Build tests" ON)

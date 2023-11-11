@@ -35,6 +35,7 @@ add_djinni_target(DjinniAllTests
   CPPCLI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cppcli"
   CPPCLI_NAMESPACE "Djinni::TestSuite"
   CPPCLI_INCLUDE_CPP_PREFIX "cpp/"
+  WASM_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -44,6 +45,7 @@ add_djinni_target(DjinniAllTests
   OBJC_OUT_FILES    OBJC_GENERATED_SRCS
   OBJCPP_OUT_FILES  OBJCPP_GENERATED_SRCS
   CPPCLI_OUT_FILES  CPPCLI_GENERATED_SRCS
+  WASM_OUT_FILES    WASM_GENERATED_SRCS
   YAML_OUT_FILE     YAML_GENERATED_SRCS
 )
 
@@ -106,11 +108,13 @@ file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
 file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
 file(GLOB_RECURSE C_WRAPPER_HANDWRITTEN_SRCS "handwritten-src/cwrapper/*")
 file(GLOB_RECURSE PYCPP_HANDWRITTEN_SRCS "handwritten-src/pycpp/*")
+file(GLOB_RECURSE WASM_HANDWRITTEN_SRCS "handwritten-src/wasm/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})
 source_group("java-tests"       FILES ${JAVA_TEST_SRCS})
 source_group("objc-tests"       FILES ${OBJC_TEST_SRCS})
+source_group("wasm-tests")
 
 source_group("generated-cpp"    FILES ${CPP_GENERATED_SRCS})
 source_group("generated-java"   FILES ${JAVA_GENERATED_SRCS})
@@ -200,6 +204,26 @@ if(DJINNI_WITH_OBJC)
   target_include_directories(DjinniObjcTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/objc/impl)
 
   xctest_add_test(XCTest.DjinniObjcTest DjinniObjcTestTests)
+endif()
+
+
+if(DJINNI_WITH_WASM)
+
+  add_library(DjinniWasmTest STATIC
+    ${CPP_HANDWRITTEN_SRCS}
+    ${CPP_GENERATED_SRCS}
+    ${WASM_GENERATED_SRCS}
+  )
+  target_include_directories(DjinniWasmTest PUBLIC
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm
+  )
+  target_link_libraries(DjinniWasmTest PUBLIC djinni-support-lib::djinni-support-lib)
+  target_include_directories(DjinniWasmTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/wasm/impl)
+
+
 endif()
 
 

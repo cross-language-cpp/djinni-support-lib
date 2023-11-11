@@ -178,6 +178,13 @@ function(add_djinni_target)
     CPPCLI_NAMESPACE
     CPPCLI_INCLUDE_CPP_PREFIX
 
+    WASM_OUT
+    WASM_OUT_FILES
+    TS_OUT
+    TS_OUT_FILES
+    WASM_NAMESPACE
+    TS_MODULE
+
     YAML_OUT
     YAML_OUT_FILE
     YAML_PREFIX
@@ -269,6 +276,9 @@ function(add_djinni_target)
 
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-namespace" ${DJINNI_CPPCLI_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-include-cpp-prefix" ${DJINNI_CPPCLI_INCLUDE_CPP_PREFIX})
+
+  append_if_defined(DJINNI_GENERATION_COMMAND "--wasm-namespace" ${DJINNI_WASM_NAMESPCE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ts-module" ${DJINNI_TS_MODULE})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
@@ -417,6 +427,38 @@ function(add_djinni_target)
     )
     set(${DJINNI_CPPCLI_OUT_FILES} ${CPPCLI_OUT_FILES} PARENT_SCOPE)
   endif()
+
+  if(DEFINED DJINNI_WASM_OUT_FILES)
+    set(DJINNI_WASM_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_WASM_GENERATION_COMMAND "--wasm-out" ${DJINNI_WASM_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_WASM_GENERATION_COMMAND}" RESULT WASM_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${WASM_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_WASM_GENERATION_COMMAND}
+      COMMENT "Generating Djinni Web Assembly bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_WASM_OUT_FILES} ${WASM_OUT_FILES} PARENT_SCOPE)
+  endif()  
+
+  if(DEFINED DJINNI_TS_OUT_FILES)
+    set(DJINNI_TS_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_TS_GENERATION_COMMAND "--ts-out" ${DJINNI_TS_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_TS_GENERATION_COMMAND}" RESULT TS_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${TS_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_TS_GENERATION_COMMAND}
+      COMMENT "Generating Djinni TS bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_TS_OUT_FILES} ${TS_OUT_FILES} PARENT_SCOPE)
+  endif()  
 
 endfunction()
 
