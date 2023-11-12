@@ -74,6 +74,8 @@ add_djinni_target(DjinniWCharTests
   CPPCLI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cppcli"
   CPPCLI_NAMESPACE "Djinni::TestSuite"
   CPPCLI_INCLUDE_CPP_PREFIX "cpp/"
+  WASM_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm"
+  YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -83,6 +85,7 @@ add_djinni_target(DjinniWCharTests
   OBJC_OUT_FILES    WCHAR_OBJC_GENERATED_SRCS
   OBJCPP_OUT_FILES  WCHAR_OBJCPP_GENERATED_SRCS
   CPPCLI_OUT_FILES  WCHAR_CPPCLI_GENERATED_SRCS
+  WASM_OUT_FILES    WCHAR_WASM_GENERATED_SRCS
   YAML_OUT_FILE     WCHAR_YAML_GENERATED_SRCS
 )
 
@@ -128,6 +131,7 @@ source_group("generated-java"   FILES ${WCHAR_JAVA_GENERATED_SRCS})
 source_group("generated-jni"    FILES ${WCHAR_JNI_GENERATED_SRCS})
 source_group("generated-objc"   FILES ${WCHAR_OBJC_GENERATED_SRCS})
 source_group("generated-objcpp" FILES ${WCHAR_OBJCPP_GENERATED_SRCS})
+source_group("generated-wasm"   FILES ${WCHAR_WASM_GENERATED_SRCS})
 source_group("generated-yaml"   FILES ${WCHAR_YAML_GENERATED_SRCS})
 
 if(DJINNI_WITH_JNI)
@@ -213,6 +217,8 @@ if(DJINNI_WITH_WASM)
     ${CPP_HANDWRITTEN_SRCS}
     ${CPP_GENERATED_SRCS}
     ${WASM_GENERATED_SRCS}
+    ${WCHAR_CPP_GENERATED_SRCS}
+    ${WCHAR_WASM_GENERATED_SRCS}
   )
   target_include_directories(DjinniWasmTest PUBLIC
     ${CMAKE_SOURCE_DIR}
@@ -220,8 +226,31 @@ if(DJINNI_WITH_WASM)
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm
   )
+
+  set(WASM_CC_FLAGS "-fexceptions")
+  message(WARNING ${WASM_CC_FLAGS})
+  set_target_properties(DjinniWasmTest PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
+  
+  set(EMSCRIPTEN_LINK_OPTIONS
+    "--bind"  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
+    "-s MALLOC=emmalloc"  # Switch to using the much smaller implementation
+    "-s MODULARIZE=1"  # Allows us to manually invoke the initialization of wasm
+    "-s WASM_BIGINT=1" # We need to pass int64_t
+  )
+
+  set(WASM_LINK_FLAGS "${EMSCRIPTEN_LINK_OPTIONS} -fexceptions")
+  message(WARNING ${WASM_LINK_FLAGS})
+  set_target_properties(DjinniWasmTest PROPERTIES LINK_FLAGS "${WASM_LINK_FLAGS}")
+#  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+  
   target_link_libraries(DjinniWasmTest PUBLIC djinni-support-lib::djinni-support-lib)
-  target_include_directories(DjinniWasmTestTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/wasm/impl)
+
+  # add_test(NAME DjinniWasmTestTests COMMAND ${Java_JAVA_EXECUTABLE}
+  #   -Xcheck:jni
+  #   -Ddjinni.native_libs_dirs=$<TARGET_FILE:DjinniTestNative>
+  #   -cp ${_JAVA_TESTS_CLASSPATH}
+  #   "com.dropbox.djinni.test.AllTests"
+  # )
 
 
 endif()

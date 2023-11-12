@@ -192,8 +192,9 @@ if(DJINNI_WITH_WASM)
     message(FATAL_ERROR "DJINNI_WITH_WASM can not be used with other bindings enabled.")
   endif()
 
+  target_include_directories(djinni_support_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/djinni/wasm>")
   target_sources(djinni_support_lib PRIVATE ${SRC_WASM})
-  source_group("wasm", FILES ${SRC_WASM})
+  source_group("wasm" FILES ${SRC_WASM})
   install(
     FILES
       "djinni/wasm/djinni_wasm.hpp"

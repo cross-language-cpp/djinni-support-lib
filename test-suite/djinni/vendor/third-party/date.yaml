@@ -35,3 +35,10 @@ cs:
   header: '"djinni/cppcli/Marshal.hpp"'
   typename: 'System::DateTime'
   reference: false
+wasm:
+  typename: 'em::val'
+  translator: '::djinni::Date'
+  header: '"djinni_wasm.hpp"'
+ts:
+  typename: 'Date'
+  module: ''
