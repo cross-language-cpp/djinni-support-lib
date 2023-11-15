@@ -213,37 +213,71 @@ endif()
 
 if(DJINNI_WITH_WASM)
 
-  add_library(DjinniWasmTest STATIC
+set(DjinniWasmTest "test-wasm")
+
+add_executable(${DjinniWasmTest} 
     ${CPP_HANDWRITTEN_SRCS}
     ${CPP_GENERATED_SRCS}
     ${WASM_GENERATED_SRCS}
     ${WCHAR_CPP_GENERATED_SRCS}
     ${WCHAR_WASM_GENERATED_SRCS}
   )
-  target_include_directories(DjinniWasmTest PUBLIC
+  target_include_directories(${DjinniWasmTest} PUBLIC
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
     ${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm
   )
 
-  set(WASM_CC_FLAGS "-fexceptions")
+  set(WASM_CC_FLAGS "-s MAIN_MODULE=1 -fexceptions")
   message(WARNING ${WASM_CC_FLAGS})
-  set_target_properties(DjinniWasmTest PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
+  set_target_properties(${DjinniWasmTest} PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
   
   set(EMSCRIPTEN_LINK_OPTIONS
-    "--bind"  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
-    "-s MALLOC=emmalloc"  # Switch to using the much smaller implementation
-    "-s MODULARIZE=1"  # Allows us to manually invoke the initialization of wasm
-    "-s WASM_BIGINT=1" # We need to pass int64_t
+    "-s WASM=1 "
+    "--bind "  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
+    "-s MALLOC=emmalloc "  # Switch to using the much smaller implementation
+    "-s MODULARIZE=1 "  # Allows us to manually invoke the initialization of wasm
+    "-s WASM_BIGINT=1 " # We need to pass int64_t
   )
 
   set(WASM_LINK_FLAGS "${EMSCRIPTEN_LINK_OPTIONS} -fexceptions")
   message(WARNING ${WASM_LINK_FLAGS})
-  set_target_properties(DjinniWasmTest PROPERTIES LINK_FLAGS "${WASM_LINK_FLAGS}")
-#  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+  set_target_properties(${DjinniWasmTest} PROPERTIES LINK_FLAGS ${WASM_LINK_FLAGS})
+  set(CMAKE_EXECUTABLE_SUFFIX ".js")
   
-  target_link_libraries(DjinniWasmTest PUBLIC djinni-support-lib::djinni-support-lib)
+  target_link_libraries(${DjinniWasmTest} PUBLIC djinni-support-lib::djinni-support-lib embind)
+
+  add_custom_target(DjinniWasmTestCopy)
+  file(GLOB DjinniWasmTestResources ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/ts/*)
+  foreach(ResourceFile ${DjinniWasmTestResources})
+    add_custom_command(TARGET ${DjinniWasmTest} PRE_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E
+                           copy ${ResourceFile} $<TARGET_FILE_DIR:DjinniWasmTest>)
+  endforeach()
+  add_dependencies(${DjinniWasmTest} DjinniWasmTestCopy)
+
+  # find_program (BASH_PROGRAM bash)
+
+  # add_test(DjinniWasmTestTests ${BASH_PROGRAM} "${CMAKE_CURRENT_BINARY_DIR}/run.sh")
+  add_test(NAME DjinniWasmTestTests COMMAND bash -c "${CMAKE_CURRENT_BINARY_DIR}/run.sh")
+
+  # add_custom_target(DjinniWasmTestPrep ALL
+  #   ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} LIBRARY_PATH=$<TARGET_FILE_DIR:mylib> ${PYTHON_EXECUTABLE}
+  #       ${PYCFFI_GENERATED_SRCS}
+  #       ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
+  #       ${C_WRAPPER_GENERATED_HEADERS}
+  #       ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cwrapper/limits_helper.h
+  #   DEPENDS mylib ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS} ${C_WRAPPER_GENERATED_HEADERS}
+  #   COMMENT "Building CFFI lib"
+  #   VERBATIM
+  #   WORKING_DIRECTORY $<TARGET_FILE_DIR:mylib>
+  # )
+
+  # add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
+  #   ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
+  # )
+
 
   # add_test(NAME DjinniWasmTestTests COMMAND ${Java_JAVA_EXECUTABLE}
   #   -Xcheck:jni
