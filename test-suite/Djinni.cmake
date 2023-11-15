@@ -15,7 +15,6 @@ execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_
 string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
 message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
 
-
 macro(append_if_defined LIST OPTION)
   if(NOT "${ARGN}" STREQUAL "")
     list(APPEND ${LIST} ${OPTION} ${ARGN})
@@ -180,9 +179,10 @@ function(add_djinni_target)
 
     WASM_OUT
     WASM_OUT_FILES
+    WASM_NAMESPACE
+    
     TS_OUT
     TS_OUT_FILES
-    WASM_NAMESPACE
     TS_MODULE
 
     YAML_OUT
@@ -277,7 +277,7 @@ function(add_djinni_target)
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-namespace" ${DJINNI_CPPCLI_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-include-cpp-prefix" ${DJINNI_CPPCLI_INCLUDE_CPP_PREFIX})
 
-  append_if_defined(DJINNI_GENERATION_COMMAND "--wasm-namespace" ${DJINNI_WASM_NAMESPCE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--wasm-namespace" ${DJINNI_WASM_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ts-module" ${DJINNI_TS_MODULE})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)

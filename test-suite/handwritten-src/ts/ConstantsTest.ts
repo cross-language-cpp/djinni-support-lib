@@ -1,5 +1,5 @@
 import {TestCase, allTests, assertEq} from "./testutils"
-import * as test from "../../generated-src/ts/test";
+import * as test from "./generated-src/ts/test";
 
 export class ConstantsTest extends TestCase {
     constructor(module: any) {

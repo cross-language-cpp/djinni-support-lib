@@ -1,5 +1,5 @@
 import {TestCase, allTests, assertTrue, assertSame} from "./testutils"
-import * as test from "../../generated-src/ts/test";
+import * as test from "./generated-src/ts/test";
 
 class JsToken {
     whoami() {

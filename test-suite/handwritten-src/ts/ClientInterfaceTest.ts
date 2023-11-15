@@ -1,5 +1,5 @@
 import {TestCase, allTests, assertEq} from "./testutils"
-import * as test from "../../generated-src/ts/test";
+import * as test from "./generated-src/ts/test";
 
 class ClientInterfaceImpl implements test.ClientInterface {
     getRecord(id: bigint, utf8String: string, misc: string | undefined) {

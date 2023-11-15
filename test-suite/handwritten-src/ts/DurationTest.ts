@@ -1,5 +1,5 @@
 import {TestCase, allTests, assertEq, assertUndefined} from "./testutils"
-import * as test from "../../generated-src/ts/test";
+import * as test from "./generated-src/ts/test";
 
 function nanos(x: number) { return x / 1000000; }
 function micros(x: number) { return x / 1000; }

@@ -1,5 +1,5 @@
 import {TestCase, allTests, assertEq, assertTrue} from "./testutils"
-import * as test from "../../generated-src/ts/test";
+import * as test from "./generated-src/ts/test";
 
 class NestedCollectionTest extends TestCase {
     m: test.Test_statics;

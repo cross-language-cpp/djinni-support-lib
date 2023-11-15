@@ -1,5 +1,5 @@
 import {TestCase, allTests, assertArrayEq, assertTrue} from "./testutils"
-import * as test from "../../generated-src/ts/test";
+import * as test from "./generated-src/ts/test";
 
 class PrimitiveListTest extends TestCase {
     m: test.Test_statics;

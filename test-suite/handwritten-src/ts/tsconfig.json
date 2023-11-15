@@ -3,7 +3,7 @@
         "lib": ["es2020", "dom"],
         "baseUrl": ".",
         "paths": {
-            "@djinni_support/*": ["../../../support-lib/ts/*"]
+            "@djinni_support/*": ["../../djinni/ts/*"]
         },
         "strict": true,
     },

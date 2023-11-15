@@ -36,6 +36,9 @@ add_djinni_target(DjinniAllTests
   CPPCLI_NAMESPACE "Djinni::TestSuite"
   CPPCLI_INCLUDE_CPP_PREFIX "cpp/"
   WASM_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm"
+  WASM_NAMESPACE "testsuite"
+  TS_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/ts"
+  TS_MODULE "test"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -46,6 +49,7 @@ add_djinni_target(DjinniAllTests
   OBJCPP_OUT_FILES  OBJCPP_GENERATED_SRCS
   CPPCLI_OUT_FILES  CPPCLI_GENERATED_SRCS
   WASM_OUT_FILES    WASM_GENERATED_SRCS
+  TS_OUT_FILES      TS_GENERATED_SRCS
   YAML_OUT_FILE     YAML_GENERATED_SRCS
 )
 
@@ -75,7 +79,9 @@ add_djinni_target(DjinniWCharTests
   CPPCLI_NAMESPACE "Djinni::TestSuite"
   CPPCLI_INCLUDE_CPP_PREFIX "cpp/"
   WASM_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm"
-  YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
+  WASM_NAMESPACE "testsuite"
+  TS_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/ts"
+  TS_MODULE "test_wchar"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -86,6 +92,7 @@ add_djinni_target(DjinniWCharTests
   OBJCPP_OUT_FILES  WCHAR_OBJCPP_GENERATED_SRCS
   CPPCLI_OUT_FILES  WCHAR_CPPCLI_GENERATED_SRCS
   WASM_OUT_FILES    WCHAR_WASM_GENERATED_SRCS
+  TS_OUT_FILES      WCHAR_TS_GENERATED_SRCS
   YAML_OUT_FILE     WCHAR_YAML_GENERATED_SRCS
 )
 
@@ -112,6 +119,7 @@ file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
 file(GLOB_RECURSE C_WRAPPER_HANDWRITTEN_SRCS "handwritten-src/cwrapper/*")
 file(GLOB_RECURSE PYCPP_HANDWRITTEN_SRCS "handwritten-src/pycpp/*")
 file(GLOB_RECURSE WASM_HANDWRITTEN_SRCS "handwritten-src/wasm/*")
+file(GLOB_RECURSE TS_HANDWRITTEN_SRCS "handwritten-src/ts/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})
@@ -124,6 +132,8 @@ source_group("generated-java"   FILES ${JAVA_GENERATED_SRCS})
 source_group("generated-jni"    FILES ${JNI_GENERATED_SRCS})
 source_group("generated-objc"   FILES ${OBJC_GENERATED_SRCS})
 source_group("generated-objcpp" FILES ${OBJCPP_GENERATED_SRCS})
+source_group("generated-wasm"   FILES ${WASM_GENERATED_SRCS})
+source_group("generated-ts"     FILES ${TS_GENERATED_SRCS})
 source_group("generated-yaml"   FILES ${YAML_GENERATED_SRCS})
 
 source_group("generated-cpp"    FILES ${WCHAR_CPP_GENERATED_SRCS})
@@ -132,6 +142,7 @@ source_group("generated-jni"    FILES ${WCHAR_JNI_GENERATED_SRCS})
 source_group("generated-objc"   FILES ${WCHAR_OBJC_GENERATED_SRCS})
 source_group("generated-objcpp" FILES ${WCHAR_OBJCPP_GENERATED_SRCS})
 source_group("generated-wasm"   FILES ${WCHAR_WASM_GENERATED_SRCS})
+source_group("generated-ts"     FILES ${WCHAR_TS_GENERATED_SRCS})
 source_group("generated-yaml"   FILES ${WCHAR_YAML_GENERATED_SRCS})
 
 if(DJINNI_WITH_JNI)
@@ -212,80 +223,53 @@ endif()
 
 
 if(DJINNI_WITH_WASM)
+  set(DjinniWasmTest "test-wasm")
 
-set(DjinniWasmTest "test-wasm")
+  add_executable(${DjinniWasmTest} 
+      ${CPP_HANDWRITTEN_SRCS}
+      ${CPP_GENERATED_SRCS}
+      ${WASM_GENERATED_SRCS}
+      ${TS_GENERATED_SRCS}
+      ${WCHAR_CPP_GENERATED_SRCS}
+      ${WCHAR_WASM_GENERATED_SRCS}
+      ${WCHAR_TS_GENERATED_SRCS}
+    )
+    target_include_directories(${DjinniWasmTest} PUBLIC
+      ${CMAKE_SOURCE_DIR}
+      ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
+      ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
+      ${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm
+    )
 
-add_executable(${DjinniWasmTest} 
-    ${CPP_HANDWRITTEN_SRCS}
-    ${CPP_GENERATED_SRCS}
-    ${WASM_GENERATED_SRCS}
-    ${WCHAR_CPP_GENERATED_SRCS}
-    ${WCHAR_WASM_GENERATED_SRCS}
-  )
-  target_include_directories(${DjinniWasmTest} PUBLIC
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm
-  )
+    set(WASM_CC_FLAGS "-s MAIN_MODULE=1 -fexceptions")
+    message(WARNING ${WASM_CC_FLAGS})
+    set_target_properties(${DjinniWasmTest} PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
+    
+    set(EMSCRIPTEN_LINK_OPTIONS
+      "-s WASM=1 "
+      "--bind "  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
+      "-s MALLOC=emmalloc "  # Switch to using the much smaller implementation
+      "-s MODULARIZE=1 "  # Allows us to manually invoke the initialization of wasm
+      "-s WASM_BIGINT=1 " # We need to pass int64_t
+    )
 
-  set(WASM_CC_FLAGS "-s MAIN_MODULE=1 -fexceptions")
-  message(WARNING ${WASM_CC_FLAGS})
-  set_target_properties(${DjinniWasmTest} PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
-  
-  set(EMSCRIPTEN_LINK_OPTIONS
-    "-s WASM=1 "
-    "--bind "  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
-    "-s MALLOC=emmalloc "  # Switch to using the much smaller implementation
-    "-s MODULARIZE=1 "  # Allows us to manually invoke the initialization of wasm
-    "-s WASM_BIGINT=1 " # We need to pass int64_t
-  )
+    set(WASM_LINK_FLAGS "${EMSCRIPTEN_LINK_OPTIONS} -fexceptions")
+    message(WARNING ${WASM_LINK_FLAGS})
+    set_target_properties(${DjinniWasmTest} PROPERTIES LINK_FLAGS ${WASM_LINK_FLAGS})
+    set(CMAKE_EXECUTABLE_SUFFIX ".js")
+    
+    target_link_libraries(${DjinniWasmTest} PUBLIC djinni-support-lib::djinni-support-lib embind)
 
-  set(WASM_LINK_FLAGS "${EMSCRIPTEN_LINK_OPTIONS} -fexceptions")
-  message(WARNING ${WASM_LINK_FLAGS})
-  set_target_properties(${DjinniWasmTest} PROPERTIES LINK_FLAGS ${WASM_LINK_FLAGS})
-  set(CMAKE_EXECUTABLE_SUFFIX ".js")
-  
-  target_link_libraries(${DjinniWasmTest} PUBLIC djinni-support-lib::djinni-support-lib embind)
+    add_custom_target(DjinniWasmTestCopy)
+    file(GLOB DjinniWasmTestResources ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/ts/*)
+    foreach(ResourceFile ${DjinniWasmTestResources})
+      add_custom_command(TARGET ${DjinniWasmTest} PRE_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E
+                            copy ${ResourceFile} $<TARGET_FILE_DIR:${DjinniWasmTest}>)
+    endforeach()
+    add_dependencies(${DjinniWasmTest} DjinniWasmTestCopy)
 
-  add_custom_target(DjinniWasmTestCopy)
-  file(GLOB DjinniWasmTestResources ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/ts/*)
-  foreach(ResourceFile ${DjinniWasmTestResources})
-    add_custom_command(TARGET ${DjinniWasmTest} PRE_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E
-                           copy ${ResourceFile} $<TARGET_FILE_DIR:DjinniWasmTest>)
-  endforeach()
-  add_dependencies(${DjinniWasmTest} DjinniWasmTestCopy)
-
-  # find_program (BASH_PROGRAM bash)
-
-  # add_test(DjinniWasmTestTests ${BASH_PROGRAM} "${CMAKE_CURRENT_BINARY_DIR}/run.sh")
-  add_test(NAME DjinniWasmTestTests COMMAND bash -c "${CMAKE_CURRENT_BINARY_DIR}/run.sh")
-
-  # add_custom_target(DjinniWasmTestPrep ALL
-  #   ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} LIBRARY_PATH=$<TARGET_FILE_DIR:mylib> ${PYTHON_EXECUTABLE}
-  #       ${PYCFFI_GENERATED_SRCS}
-  #       ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
-  #       ${C_WRAPPER_GENERATED_HEADERS}
-  #       ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cwrapper/limits_helper.h
-  #   DEPENDS mylib ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS} ${C_WRAPPER_GENERATED_HEADERS}
-  #   COMMENT "Building CFFI lib"
-  #   VERBATIM
-  #   WORKING_DIRECTORY $<TARGET_FILE_DIR:mylib>
-  # )
-
-  # add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
-  #   ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
-  # )
-
-
-  # add_test(NAME DjinniWasmTestTests COMMAND ${Java_JAVA_EXECUTABLE}
-  #   -Xcheck:jni
-  #   -Ddjinni.native_libs_dirs=$<TARGET_FILE:DjinniTestNative>
-  #   -cp ${_JAVA_TESTS_CLASSPATH}
-  #   "com.dropbox.djinni.test.AllTests"
-  # )
-
+    add_test(NAME DjinniWasmTestTests COMMAND bash -c "${CMAKE_CURRENT_BINARY_DIR}/run.sh")
 
 endif()
 
