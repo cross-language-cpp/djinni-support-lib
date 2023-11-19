@@ -245,12 +245,12 @@ if(DJINNI_WITH_WASM)
     message(WARNING ${WASM_CC_FLAGS})
     set_target_properties(${DjinniWasmTest} PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
     
-    set(EMSCRIPTEN_LINK_OPTIONS
-      "-s WASM=1 "
-      "--bind "  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
-      "-s MALLOC=emmalloc "  # Switch to using the much smaller implementation
-      "-s MODULARIZE=1 "  # Allows us to manually invoke the initialization of wasm
-      "-s WASM_BIGINT=1 " # We need to pass int64_t
+    string(JOIN " " EMSCRIPTEN_LINK_OPTIONS
+      "-s WASM=1"
+      "--bind"  # Compiles the source code using the Embind bindings to connect C/C++ and JavaScript
+      "-s MALLOC=emmalloc"  # Switch to using the much smaller implementation
+      "-s MODULARIZE=1"  # Allows us to manually invoke the initialization of wasm
+      "-s WASM_BIGINT=1" # We need to pass int64_t
     )
 
     set(WASM_LINK_FLAGS "${EMSCRIPTEN_LINK_OPTIONS} -fexceptions")
