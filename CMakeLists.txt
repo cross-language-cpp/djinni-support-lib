@@ -10,6 +10,8 @@ project(djinni_support_lib CXX ${PROJECT_LANGUAGES})
 
 include(GNUInstallDirs)
 
+include(cmake/Djinni.cmake)
+
 set(SRC_SHARED
   "djinni/djinni_common.hpp"
   "djinni/proxy_cache_interface.hpp"
@@ -211,5 +213,6 @@ option(DJINNI_BUILD_TESTING "Build tests" ON)
 
 include(CTest)
 if (BUILD_TESTING AND DJINNI_BUILD_TESTING)
+  add_subdirectory(examples)
   add_subdirectory(test-suite)
 endif()

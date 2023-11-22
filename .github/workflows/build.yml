@@ -123,6 +123,26 @@ jobs:
       working-directory: build/test-suite
       run: ctest -C Release -V
 
+  build-on-ubuntu-for-wasm:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: asdf-vm/actions/install@v1
+    - name: Install dependencies
+      uses: py-actions/py-dependency-install@v3
+      with:
+        path: "requirements.txt"
+    - name: Setup EMSDK
+      uses: mymindstorm/setup-emsdk@v11
+      with:
+        version: 3.1.44
+    - name: Report cmake version
+      run: cmake --version
+    - name: Configure cmake
+      run: cmake -S . -B build -DDJINNI_WITH_WASM=ON
+    - name: Build release
+      run: cmake --build build --parallel $(nproc) --config Release
+     
 
   build-on-windows-for-cppcli:
     runs-on: windows-latest

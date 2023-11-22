@@ -9,8 +9,6 @@ endif()
 
 enable_testing()
 
-include(Djinni.cmake)
-
 add_djinni_target(DjinniAllTests
   IDL "djinni/all.djinni"
   IDL_INCLUDE_PATH "djinni/vendor"

@@ -450,6 +450,7 @@ function(add_djinni_target)
 
     resolve_djinni_outputs(COMMAND "${DJINNI_TS_GENERATION_COMMAND}" RESULT TS_OUT_FILES)
 
+    message(STATUS "Output: ${TS_OUT_FILES}, Depends: ${DJINNI_INPUTS}, Command: ${DJINNI_TS_GENERATION_COMMAND}")
     add_custom_command(
       OUTPUT ${TS_OUT_FILES}
       DEPENDS ${DJINNI_INPUTS}
