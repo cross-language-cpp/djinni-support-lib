@@ -1,6 +1,10 @@
 #! /usr/bin/env bash
+#! /usr/bin/env bash
 set -eu
+# compile TS
 tsc
+# bundle
 browserify main.js -o bundle.js
-sleep 1 && python3 -mwebbrowser http://localhost:8000/test.html &
-python3 -m http.server
+# then run the selenium tests
+sleep 1 && python3 run-tests-selenium.py
+

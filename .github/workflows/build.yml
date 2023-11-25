@@ -132,11 +132,19 @@ jobs:
       uses: py-actions/py-dependency-install@v3
       with:
         path: "requirements.txt"
+    - name: Install node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.9.0
+    - name: Install browserify
+      run: npm install -g browserify
     - name: Setup EMSDK
       uses: mymindstorm/setup-emsdk@v11
       with:
         version: 3.1.44
-    - name: Use local djinni djinni
+    - name: Install chrome
+      uses: browser-actions/setup-chrome@latest
+    - name: Use local djinni on branch for now
       if: ${{ github.ref != 'refs/heads/master' }}
       run: export CMAKE_DJINNI_OPT="-DDJINNI_EXECUTABLE=$(pwd)/bin/djinni"
     - name: Report cmake version
@@ -145,7 +153,8 @@ jobs:
       run: cmake  -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -S . -B build -DDJINNI_WITH_WASM=ON -DDJINNI_EXECUTABLE=$(pwd)/bin/djinni
     - name: Build release
       run: cmake --build build --parallel $(nproc) --config Release
-     
+    - name: Run headless test
+      run: pushd build && ctest --output-on-failure
 
   build-on-windows-for-cppcli:
     runs-on: windows-latest

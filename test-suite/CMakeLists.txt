@@ -240,7 +240,6 @@ if(DJINNI_WITH_WASM)
     )
 
     set(WASM_CC_FLAGS "-s MAIN_MODULE=1 -fexceptions")
-    message(WARNING ${WASM_CC_FLAGS})
     set_target_properties(${DjinniWasmTest} PROPERTIES COMPILE_FLAGS ${WASM_CC_FLAGS})
     
     string(JOIN " " EMSCRIPTEN_LINK_OPTIONS
@@ -252,7 +251,6 @@ if(DJINNI_WITH_WASM)
     )
 
     set(WASM_LINK_FLAGS "${EMSCRIPTEN_LINK_OPTIONS} -fexceptions")
-    message(WARNING ${WASM_LINK_FLAGS})
     set_target_properties(${DjinniWasmTest} PROPERTIES LINK_FLAGS ${WASM_LINK_FLAGS})
     set(CMAKE_EXECUTABLE_SUFFIX ".js")
     
