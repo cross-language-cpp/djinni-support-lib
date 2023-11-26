@@ -184,6 +184,7 @@ function(add_djinni_target)
     TS_OUT
     TS_OUT_FILES
     TS_MODULE
+    TS_SUPPORT_FILES_OUT
 
     YAML_OUT
     YAML_OUT_FILE
@@ -279,6 +280,7 @@ function(add_djinni_target)
 
   append_if_defined(DJINNI_GENERATION_COMMAND "--wasm-namespace" ${DJINNI_WASM_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--ts-module" ${DJINNI_TS_MODULE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ts-support-files-out" ${DJINNI_TS_SUPPORT_FILES_OUT})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
