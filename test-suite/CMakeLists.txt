@@ -37,6 +37,7 @@ add_djinni_target(DjinniAllTests
   WASM_NAMESPACE "testsuite"
   TS_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/ts"
   TS_MODULE "test"
+  TS_SUPPORT_FILES_OUT "${CMAKE_CURRENT_BINARY_DIR}/ts-support-lib"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -80,7 +81,6 @@ add_djinni_target(DjinniWCharTests
   WASM_NAMESPACE "testsuite"
   TS_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/ts"
   TS_MODULE "test_wchar"
-  TS_SUPPORT_FILES_OUT "${CMAKE_CURRENT_BINARY_DIR}/ts-support-lib"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 

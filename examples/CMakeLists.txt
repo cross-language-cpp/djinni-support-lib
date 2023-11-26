@@ -36,6 +36,7 @@ add_djinni_target(DjinniTextSort
   WASM_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/wasm"
   TS_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/ts"
   TS_MODULE "example"
+  TS_SUPPORT_FILES_OUT "${CMAKE_CURRENT_BINARY_DIR}/ts-support-lib"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 

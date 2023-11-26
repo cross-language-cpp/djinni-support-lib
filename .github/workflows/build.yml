@@ -155,6 +155,8 @@ jobs:
       run: cmake --build build --parallel $(nproc) --config Release
     - name: Run headless test
       run: pushd build && ctest --output-on-failure
+    - name: Run integration test on sample app
+      run: pushd build/examples && ./run.sh && python3 run-tests-selenium.py 
 
   build-on-windows-for-cppcli:
     runs-on: windows-latest
