@@ -1,3 +1,13 @@
+env:
+  GENERATOR_BUILID: "release"
+  # valid options: "release", "latest", "pr-NNN"
+  # "release" is the latest djinni generator release
+  # "latest" is the  djinni generator build of the latest state of main, might be equal release, or newer
+  # "pr-NNN" is the  djinni generator build of a pull request, NNN is the pullrequest number
+  # This can be used to check that a support lib builds with new generator changes that have not been released yet
+  # Note: the pipeline will not succeed with a generator different than release,
+  #       but we can verify that the support lib builds and tests successfully with a generator different (newer) than release
+
 name: build-all-configs
 on: [push, pull_request]
 jobs:
@@ -28,10 +38,10 @@ jobs:
     runs-on: macos-11
     strategy:
       matrix:
-        python-version: ["3.7.12", "3.10.4"] # oldest and newest, rest assumed to work
+        python-version: ["3.7.17", "3.12.1"] # oldest and newest, rest assumed to work
     steps:
     - uses: actions/checkout@v2
-    - uses: asdf-vm/actions/install@v1
+    # - uses: asdf-vm/actions/install@v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -40,10 +50,12 @@ jobs:
       uses: py-actions/py-dependency-install@v3
       with:
         path: "requirements.txt"
+    - name: Download Genearator
+      run: python get-generator.py ${{ env.GENERATOR_BUILID }}
     - name: Report cmake version
       run: cmake --version
     - name: Configure cmake
-      run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON
+      run: cmake -S . -B build -DDJINNI_WITH_PYTHON=ON -DDJINNI_EXECUTABLE="$(pwd)/zz/djinni"
     - name: Build release
       run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
     - name: Run tests
@@ -154,3 +166,14 @@ jobs:
       working-directory: build/check_install_root
       run: if((Compare-Object (Get-Content ..\..\test\cppcli_list.txt) (Resolve-Path -Path (Get-ChildItem -Recurse).FullName -Relative))) { Write-Error "file list not equal" }
 
+
+  check_generator_buildid:
+      needs: ["build-on-windows-for-cppcli", "build-on-ubuntu-for-python", "build-on-ubuntu-for-android_arm32-with-thread-attach", "build-on-ubuntu-for-jni-with-thread-attach", "build-on-ubuntu-for-jni", "build-on-osx-for-python", "build-on-osx-for-objectiveC"]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Check GENERATOR_BUILID
+          run: |
+            if [[ "${{ env.GENERATOR_BUILID }}" != "release" ]]; then
+              echo "GENERATOR_BUILID is not set to 'release'"
+              exit 1
+            fi
