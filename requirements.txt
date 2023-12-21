@@ -1,3 +1,7 @@
+# python bindings
 cffi==1.14.5
 future==0.18.2
 pytest==6.2.5
+# for local helpers
+requests
+
