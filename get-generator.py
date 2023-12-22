@@ -150,11 +150,14 @@ repo = 'djinni-generator'
 
 try:
     if dl_arg.startswith("pr-"):
+        print(f'Downloading from PR: {dl_arg}')
         pr_number = dl_arg[len("pr-"):]
         download_from_pr(owner, repo, pr_number)
     elif dl_arg == 'latest':
+        print('Downloading latest')
         get_latest_pre_release(owner, repo)
     elif dl_arg == 'release':
+        print('Downloading release')
         get_latest_release(owner, repo)
     else:
         raise Exception('Invalid argument given')

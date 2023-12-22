@@ -50,9 +50,13 @@ jobs:
       uses: py-actions/py-dependency-install@v3
       with:
         path: "requirements.txt"
-    - name: Download Genearator
-      run: python3 get-generator.py ${{ env.GENERATOR_BUILID }}
+    - name: Download Generator
+      run: |
+        echo "GENERATOR_BUILID: $GENERATOR_BUILID"
+        echo "GENERATOR_DL_TOKEN: $GENERATOR_DL_TOKEN"
+        python get-generator.py $GENERATOR_BUILID
       env:
+        GENERATOR_BUILID: ${{ env.GENERATOR_BUILID }}
         GENERATOR_DL_TOKEN: ${{ secrets.GENERATOR_DL_TOKEN }}
     - name: Report cmake version
       run: cmake --version
