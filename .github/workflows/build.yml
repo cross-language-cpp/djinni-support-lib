@@ -8,6 +8,9 @@ env:
   # Note: the pipeline will not succeed with a generator different than release,
   #       but we can verify that the support lib builds and tests successfully with a generator different (newer) than release
 
+
+
+
 name: build-all-configs
 on: [push, pull_request]
 jobs:
@@ -40,6 +43,11 @@ jobs:
       matrix:
         python-version: ["3.7.17", "3.12.1"] # oldest and newest, rest assumed to work
     steps:
+    - name: Test Secret Value
+      env:
+        TEST_SECRET: ${{ secrets.GENERATOR_DL_TOKEN }}
+      run: |
+        echo "Length of secret: ${#TEST_SECRET}"
     - uses: actions/checkout@v2
 #    - uses: asdf-vm/actions/install@v1
     - name: Set up Python ${{ matrix.python-version }}
@@ -69,6 +77,11 @@ jobs:
   build-on-ubuntu-for-jni:
     runs-on: ubuntu-latest
     steps:
+    - name: Test Secret Value
+      env:
+        TEST_SECRET: ${{ secrets.GENERATOR_DL_TOKEN }}
+      run: |
+        echo "Length of secret: ${#TEST_SECRET}"
     - uses: actions/checkout@v2
     - uses: asdf-vm/actions/install@v1
     - name: Report cmake version
