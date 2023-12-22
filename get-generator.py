@@ -78,6 +78,8 @@ def download_from_pr(owner, repo, pr_number):
     headers = {'Authorization': f'token {TOKEN}'}
     download_name=f'djinni-generator-{pr_number}.zip'
 
+    dbg_print(headers)
+
     # Get the commits for the pull request
     response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}/commits', headers=headers)
     commits = response.json()
