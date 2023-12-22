@@ -42,7 +42,7 @@ jobs:
     steps:
     - name: Test Secret Value
       env:
-        TEST_SECRET: ${{ secrets.GENERATOR_DL_TOKEN }}
+        TEST_SECRET: ${{ secrets.GITHUB_TOKEN }}
         TEST_VAL: ${{ vars.TEST_VAR }}
       run: |
         echo "Length of secret: ${#TEST_SECRET}"
@@ -59,7 +59,7 @@ jobs:
         path: "requirements.txt"
     - name: Download Generator
       run: |
-        python get-generator.py $GENERATOR_BUILID ${{ secrets.GENERATOR_DL_TOKEN }}
+        python get-generator.py $GENERATOR_BUILID
       env:
         GENERATOR_BUILID: ${{ env.GENERATOR_BUILID }}
         GENERATOR_DL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
