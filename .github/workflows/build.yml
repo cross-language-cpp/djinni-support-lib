@@ -8,11 +8,8 @@ env:
   # Note: the pipeline will not succeed with a generator different than release,
   #       but we can verify that the support lib builds and tests successfully with a generator different (newer) than release
 
-
-
-
 name: build-all-configs
-on: [push, pull_request_target, workflow_dispatch]
+on: [push, pull_request]
 jobs:
   build-on-osx-for-objectiveC:
     runs-on: macos-11
