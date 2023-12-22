@@ -52,8 +52,6 @@ jobs:
         path: "requirements.txt"
     - name: Download Generator
       run: |
-        echo "GENERATOR_BUILID: $GENERATOR_BUILID"
-        echo "GENERATOR_DL_TOKEN: $GENERATOR_DL_TOKEN"
         python get-generator.py $GENERATOR_BUILID
       env:
         GENERATOR_BUILID: ${{ env.GENERATOR_BUILID }}

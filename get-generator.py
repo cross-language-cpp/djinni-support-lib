@@ -6,6 +6,8 @@ import zipfile
 import os
 import platform
 
+import traceback
+
 """ Download djinni generator from the last successful check of a pull request.
 
     Usage: python get-generator-from-pr.py <PR number>
@@ -162,5 +164,6 @@ try:
     else:
         raise Exception('Invalid argument given')
 except Exception as e:
-    print('Error:', e)
+    print('Got Error:', e)
+    traceback.print_exc()
     sys.exit(f'Error occurred: {e}')
