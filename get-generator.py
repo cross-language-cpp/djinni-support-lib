@@ -162,4 +162,5 @@ try:
     else:
         raise Exception('Invalid argument given')
 except Exception as e:
+    print('Error:', e)
     sys.exit(f'Error occurred: {e}')
