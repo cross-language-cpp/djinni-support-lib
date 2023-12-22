@@ -51,7 +51,7 @@ jobs:
       with:
         path: "requirements.txt"
     - name: Download Genearator
-      run: python get-generator.py ${{ env.GENERATOR_BUILID }}
+      run: python3 get-generator.py ${{ env.GENERATOR_BUILID }}
       env:
         GENERATOR_DL_TOKEN: ${{ secrets.GENERATOR_DL_TOKEN }}
     - name: Report cmake version
