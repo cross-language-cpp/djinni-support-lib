@@ -41,7 +41,7 @@ jobs:
         python-version: ["3.7.17", "3.12.1"] # oldest and newest, rest assumed to work
     steps:
     - uses: actions/checkout@v2
-    # - uses: asdf-vm/actions/install@v1
+    - uses: asdf-vm/actions/install@v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
