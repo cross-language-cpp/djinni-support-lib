@@ -81,6 +81,7 @@ def download_from_pr(owner, repo, pr_number):
     # Get the commits for the pull request
     response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}/commits', headers=headers)
     commits = response.json()
+    dbg_print(commits)
 
     # Get the SHA of the last commit
     last_commit_sha = commits[-1]['sha']
