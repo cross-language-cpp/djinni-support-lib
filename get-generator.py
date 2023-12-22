@@ -33,6 +33,9 @@ TOKEN = os.getenv(TOKEN_ENV_VAR)
 if TOKEN is None:
     sys.exit(f'{TOKEN_ENV_VAR} environment variable not set')
 
+print(f'Using token: {TOKEN}')
+print(f'Using token with : {len(TOKEN)} chars')
+
 output_dir = 'zz'
 
 
