@@ -46,8 +46,10 @@ jobs:
     - name: Test Secret Value
       env:
         TEST_SECRET: ${{ secrets.GENERATOR_DL_TOKEN }}
+        TEST_VAL: ${{ env.TEST_VAR }}
       run: |
         echo "Length of secret: ${#TEST_SECRET}"
+        echo "Length of val: ${#TEST_VAL}"
     - uses: actions/checkout@v2
 #    - uses: asdf-vm/actions/install@v1
     - name: Set up Python ${{ matrix.python-version }}
