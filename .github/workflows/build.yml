@@ -62,7 +62,7 @@ jobs:
         python get-generator.py $GENERATOR_BUILID ${{ secrets.GENERATOR_DL_TOKEN }}
       env:
         GENERATOR_BUILID: ${{ env.GENERATOR_BUILID }}
-        GENERATOR_DL_TOKEN: ${{ secrets.GENERATOR_DL_TOKEN }}
+        GENERATOR_DL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Report cmake version
       run: cmake --version
     - name: Configure cmake
