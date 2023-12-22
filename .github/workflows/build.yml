@@ -12,7 +12,7 @@ env:
 
 
 name: build-all-configs
-on: [push, pull_request_target, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
 jobs:
   build-on-osx-for-objectiveC:
     runs-on: macos-11
