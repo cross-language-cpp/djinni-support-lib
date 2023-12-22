@@ -46,7 +46,7 @@ jobs:
     - name: Test Secret Value
       env:
         TEST_SECRET: ${{ secrets.GENERATOR_DL_TOKEN }}
-        TEST_VAL: ${{ env.TEST_VAR }}
+        TEST_VAL: ${{ vars.TEST_VAR }}
       run: |
         echo "Length of secret: ${#TEST_SECRET}"
         echo "Length of val: ${#TEST_VAL}"
