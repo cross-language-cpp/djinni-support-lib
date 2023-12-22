@@ -27,6 +27,17 @@ import traceback
     10. Run the generator
 """
 
+dl_arg = sys.argv[1]
+if not dl_arg:
+    sys.exit('No argument given')
+
+
+key_arg = sys.argv[2]
+
+if key_arg:
+    print(f'Using key: {key_arg}')
+    os.environ['GENERATOR_DL_TOKEN'] = key_arg
+
 # Get the token from the environment variable
 TOKEN_ENV_VAR='GENERATOR_DL_TOKEN'
 TOKEN = os.getenv(TOKEN_ENV_VAR)
@@ -148,10 +159,6 @@ def get_latest_pre_release(owner, repo):
             make_executable(dl_file)
             break
 
-# Get the argument, TODO, use argparse and add optional a folder argument
-dl_arg = sys.argv[1]
-if not dl_arg:
-    sys.exit('No argument given')
 
 owner = 'cross-language-cpp'
 repo = 'djinni-generator'
