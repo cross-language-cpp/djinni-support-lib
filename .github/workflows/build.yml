@@ -1,5 +1,10 @@
 name: build-all-configs
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
 jobs:
   build-on-osx-for-objectiveC:
     runs-on: macos-11
