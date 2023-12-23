@@ -9,7 +9,15 @@ env:
   #       but we can verify that the support lib builds and tests successfully with a generator different (newer) than release
 
 name: build-all-configs
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
 jobs:
   build-on-osx-for-objectiveC:
     runs-on: macos-11
