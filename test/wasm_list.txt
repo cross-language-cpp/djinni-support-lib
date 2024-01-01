@@ -1,0 +1,12 @@
+ .
+./usr
+./usr/local
+./usr/local/lib
+./usr/local/lib/libdjinni_support_lib.a
+./usr/local/include
+./usr/local/include/djinni
+./usr/local/include/djinni/djinni_common.hpp
+./usr/local/include/djinni/wasm
+./usr/local/include/djinni/wasm/djinni_wasm.hpp
+./usr/local/include/djinni/proxy_cache_impl.hpp
+./usr/local/include/djinni/proxy_cache_interface.hpp

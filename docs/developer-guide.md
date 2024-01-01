@@ -28,7 +28,7 @@ cmake --build . --parallel
 ```
 
 A custom `djinni` executable can be specified with the CMake option
-`DJINNI_EXECUTABLE_PATH`.
+`DJINNI_EXECUTABLE`.
 
 ### Running Tests
 

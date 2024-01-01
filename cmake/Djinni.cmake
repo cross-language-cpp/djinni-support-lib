@@ -15,7 +15,6 @@ execute_process(COMMAND ${DJINNI_EXECUTABLE} "--version" OUTPUT_VARIABLE DJINNI_
 string(REGEX REPLACE "\n+$" "" DJINNI_VERSION "${DJINNI_VERSION}")
 message(STATUS "Found Djinni: ${DJINNI_EXECUTABLE} (${DJINNI_VERSION})")
 
-
 macro(append_if_defined LIST OPTION)
   if(NOT "${ARGN}" STREQUAL "")
     list(APPEND ${LIST} ${OPTION} ${ARGN})
@@ -178,6 +177,15 @@ function(add_djinni_target)
     CPPCLI_NAMESPACE
     CPPCLI_INCLUDE_CPP_PREFIX
 
+    WASM_OUT
+    WASM_OUT_FILES
+    WASM_NAMESPACE
+    
+    TS_OUT
+    TS_OUT_FILES
+    TS_MODULE
+    TS_SUPPORT_FILES_OUT
+
     YAML_OUT
     YAML_OUT_FILE
     YAML_PREFIX
@@ -269,6 +277,10 @@ function(add_djinni_target)
 
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-namespace" ${DJINNI_CPPCLI_NAMESPACE})
   append_if_defined(DJINNI_GENERATION_COMMAND "--cppcli-include-cpp-prefix" ${DJINNI_CPPCLI_INCLUDE_CPP_PREFIX})
+
+  append_if_defined(DJINNI_GENERATION_COMMAND "--wasm-namespace" ${DJINNI_WASM_NAMESPACE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ts-module" ${DJINNI_TS_MODULE})
+  append_if_defined(DJINNI_GENERATION_COMMAND "--ts-support-files-out" ${DJINNI_TS_SUPPORT_FILES_OUT})
 
   if(DEFINED DJINNI_CPP_OUT_FILES)
     set(DJINNI_CPP_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
@@ -417,6 +429,39 @@ function(add_djinni_target)
     )
     set(${DJINNI_CPPCLI_OUT_FILES} ${CPPCLI_OUT_FILES} PARENT_SCOPE)
   endif()
+
+  if(DEFINED DJINNI_WASM_OUT_FILES)
+    set(DJINNI_WASM_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_WASM_GENERATION_COMMAND "--wasm-out" ${DJINNI_WASM_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_WASM_GENERATION_COMMAND}" RESULT WASM_OUT_FILES)
+
+    add_custom_command(
+      OUTPUT ${WASM_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_WASM_GENERATION_COMMAND}
+      COMMENT "Generating Djinni Web Assembly bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_WASM_OUT_FILES} ${WASM_OUT_FILES} PARENT_SCOPE)
+  endif()  
+
+  if(DEFINED DJINNI_TS_OUT_FILES)
+    set(DJINNI_TS_GENERATION_COMMAND ${DJINNI_GENERATION_COMMAND})
+    append_if_defined(DJINNI_TS_GENERATION_COMMAND "--ts-out" ${DJINNI_TS_OUT})
+
+    resolve_djinni_outputs(COMMAND "${DJINNI_TS_GENERATION_COMMAND}" RESULT TS_OUT_FILES)
+
+    message(STATUS "Output: ${TS_OUT_FILES}, Depends: ${DJINNI_INPUTS}, Command: ${DJINNI_TS_GENERATION_COMMAND}")
+    add_custom_command(
+      OUTPUT ${TS_OUT_FILES}
+      DEPENDS ${DJINNI_INPUTS}
+      COMMAND ${DJINNI_TS_GENERATION_COMMAND}
+      COMMENT "Generating Djinni TS bindings from ${DJINNI_IDL}"
+      VERBATIM
+    )
+    set(${DJINNI_TS_OUT_FILES} ${TS_OUT_FILES} PARENT_SCOPE)
+  endif()  
 
 endfunction()
 
