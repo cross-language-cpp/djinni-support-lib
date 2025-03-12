@@ -16,7 +16,14 @@
 
 #pragma once
 
+#include <exception>
+
 namespace djinni {
+
+typedef NSException * (* ExceptionTranslatorFunc)(const std::exception & e);
+
+// Sets custom function to perform the translation of C++ exception to NSException
+void setCustomExceptionTranslator(ExceptionTranslatorFunc func);
 
 // Throws an exception for an unimplemented method call.
 [[noreturn]] void throwUnimplemented(const char * ctx, NSString * msg);

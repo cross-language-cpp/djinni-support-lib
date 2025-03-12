@@ -16,11 +16,16 @@
 // clang-format off
 #include <Foundation/Foundation.h>
 #include "DJIError.h"
-#include <exception>
 // clang-format on
 static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for this file");
 
 namespace djinni {
+
+ExceptionTranslatorFunc customTranslatorFunc = nullptr;
+
+void setCustomExceptionTranslator(ExceptionTranslatorFunc func) {
+    customTranslatorFunc = func;
+}
 
 [[noreturn]] __attribute__((weak)) void throwUnimplemented(const char * /*ctx*/, NSString * message) {
     [NSException raise:NSInternalInconsistencyException format:@"Unimplemented: %@", message];
@@ -31,8 +36,13 @@ namespace djinni {
     try {
         throw;
     } catch (const std::exception & e) {
-        NSString *message = [NSString stringWithCString:e.what() encoding:NSUTF8StringEncoding];
-        [NSException raise:message format:@"%@", message];
+        if (customTranslatorFunc) {
+            NSException *exception = customTranslatorFunc(e);
+            [exception raise];
+        } else {
+            NSString *message = [NSString stringWithCString:e.what() encoding:NSUTF8StringEncoding];
+            [NSException raise:message format:@"%@", message];
+        }
         __builtin_unreachable();
     }
 }
