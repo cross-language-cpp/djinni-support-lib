@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -241,7 +241,7 @@ if(DJINNI_WITH_PYTHON)
       "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
       $ENV{PYTHONPATH})
   endif()
-  
+
   # Compile Python extension module (CFFI)
   set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
   list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")

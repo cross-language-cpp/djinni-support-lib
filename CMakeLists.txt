@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 if(DJINNI_WITH_OBJC)
   set(PROJECT_LANGUAGES OBJC OBJCXX)
