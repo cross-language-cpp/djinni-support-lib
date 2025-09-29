@@ -32,9 +32,6 @@ add_djinni_target(DjinniAllTests
   OBJC_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc"
   OBJC_TYPE_PREFIX "DB"
   OBJCPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc"
-  CPPCLI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cppcli"
-  CPPCLI_NAMESPACE "Djinni::TestSuite"
-  CPPCLI_INCLUDE_CPP_PREFIX "cpp/"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -69,9 +66,6 @@ add_djinni_target(DjinniWCharTests
   OBJC_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc"
   OBJC_TYPE_PREFIX "DB"
   OBJCPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/objc"
-  CPPCLI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cppcli"
-  CPPCLI_NAMESPACE "Djinni::TestSuite"
-  CPPCLI_INCLUDE_CPP_PREFIX "cpp/"
   YAML_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/yaml"
   YAML_PREFIX "test_"
 
@@ -84,21 +78,6 @@ add_djinni_target(DjinniWCharTests
   YAML_OUT_FILE     WCHAR_YAML_GENERATED_SRCS
 )
 
-add_djinni_target(DjinniPyTests
-  IDL "djinni/py_all.djinni"
-  PY_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
-  PYCFFI_PACKAGE_NAME "PyCFFIlib"
-  PYCFFI_DYNAMIC_LIB_LIST "mylib"
-  PYCFFI_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cffi"
-  C_WRAPPER_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/cwrapper"
-  CPP_OUT "${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp"
-  CPP_NAMESPACE "testsuite"
-  IDENT_CPP_ENUM_TYPE "foo_bar"
-  PY_OUT_FILES         PYTHON_GENERATED_SRCS
-  PYCFFI_OUT_FILES     PYCFFI_GENERATED_SRCS
-  C_WRAPPER_OUT_FILES  C_WRAPPER_GENERATED_SRCS
-  CPP_OUT_FILES        PYCPP_GENERATED_SRCS
-)
 
 file(GLOB_RECURSE CPP_HANDWRITTEN_SRCS "handwritten-src/cpp/*")
 file(GLOB_RECURSE JAVA_TEST_SRCS "handwritten-src/java/*")
