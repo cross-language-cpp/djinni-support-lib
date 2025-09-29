@@ -41,6 +41,17 @@ To succeed, sh zconf-new.sh shall run without error, and a build of it must work
 In the new generator, the C wrapper has been disabled, maybe we bring the back.
 If there are problems due to the C wrapper, we will disable them in this project for now.
 
+## Step 3
+
+Remove all code that does not belong to Objective-C and Java (JNI) or C support.
+
+### Definition of done 3
+
+To succeed, sh zconf-new.sh shall run without error, and a build of it must work!
+
+In the new generator, the C wrapper has been disabled, maybe we bring the back.
+If there are problems due to the C wrapper, we will disable them in this project for now.
+
 ## General build instrucktions
 
 ### New version
