@@ -19,16 +19,22 @@ To make that happen, I need 2 generator versions.
 Implementation shall happen step by step and interative.
 No agent mode to go crazy, follow the plan.
 
-## Clean up build system (step 1)
+## step 1
 
-I have encapsulated the old and new CMake calls in 2 scripts in the working directory
+Clean up CMake build system
 
-- Old generator with support for c# and python (sh zconf-old.sh)
-- New generator where support for c# and python was removed (sh zconf-new.sh)
+### Definition of done 1
 
-Review the scripts, zconf-old.sh and zconf-new.sh to understand them, but do not change them
+To succeed, sh zconf-new.sh shall run without error, and a build of it must work!
 
-### Definition of done
+In the new generator, the C wrapper has been disabled, maybe we bring the back.
+If there are problems due to the C wrapper, we will disable them in this project for now.
+
+## Step 2
+
+Remove all code that does not belong to Objective-C and Java (JNI) or C support.
+
+### Definition of done 2
 
 To succeed, sh zconf-new.sh shall run without error, and a build of it must work!
 
