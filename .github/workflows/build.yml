@@ -2,7 +2,7 @@ name: build-all-configs
 on: [push, pull_request]
 jobs:
   build-on-osx-for-objectiveC:
-    runs-on: macos-11
+    runs-on: macos-lastest
     steps:
       - uses: actions/checkout@v2
       - uses: asdf-vm/actions/install@v1
