@@ -5,7 +5,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - uses: asdf-vm/actions/install@v4
       - name: Report cmake version
         run: cmake --version
       - name: Configure cmake
