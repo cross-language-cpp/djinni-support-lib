@@ -9,7 +9,7 @@ jobs:
       - name: Report cmake version
         run: cmake --version
       - name: Configure cmake
-        run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -G Xcode
+        run: cmake -S . -B build -DDJINNI_WITH_OBJC=ON -DCMAKE_OSX_SYSROOT=$(xcodebuild -version -sdk macosx Path) -G Xcode
       - name: Build release
         run: cmake --build build --parallel $(sysctl -n hw.ncpu) --config Release
       - name: Run tests
