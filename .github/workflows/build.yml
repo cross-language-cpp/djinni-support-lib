@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - uses: asdf-vm/actions/install@v4
       - name: Report cmake version
         run: cmake --version
       - name: Configure cmake
@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - uses: asdf-vm/actions/install@v4
       - name: Report cmake version
         run: cmake --version
       - name: Configure cmake
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - uses: asdf-vm/actions/install@v4
       - uses: ashutoshvarma/setup-ninja@master
         with:
           version: 1.10.2
