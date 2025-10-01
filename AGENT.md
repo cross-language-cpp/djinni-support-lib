@@ -9,7 +9,7 @@ There is a python interaface and a C# interface.
 We can keep the plain c wrapper, called cwrapper, if is is C specific and does not have dependencies other than C/C++.
 
 - [x] Clean up the build system and remove everything does does not belong to Objective-C and Java (JNI) or C support.
-- [ ] Remove all code that does not belong to Objective-C and Java (JNI) or C support.
+- [x] Remove all code that does not belong to Objective-C and Java (JNI) or C support.
 - [ ] Remove all tests that does not belong to Objective-C and Java (JNI) or C support.
 - [ ] Clean up the documentation remove everything that does not belong to Objective-C and Java (JNI) or C support.
 
@@ -43,7 +43,7 @@ If there are problems due to the C wrapper, we will disable them in this project
 
 ## Step 3
 
-Remove all code that does not belong to Objective-C and Java (JNI) or C support.
+Remove all test code that does not belong to Objective-C and Java (JNI) or C support.
 
 ### Definition of done 3
 
