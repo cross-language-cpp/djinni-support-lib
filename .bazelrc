@@ -1,0 +1,16 @@
+# Enable platform-specific config
+common --enable_platform_specific_config
+
+# GCC/Clang warnings
+build:unix --copt=-Wall --copt=-Wextra --copt=-Wpedantic --copt=-Werror --copt=-std=c++17
+# MSVC warnings
+# build:msvc --copt=/W4 --copt=/WX
+
+# Map configs to platforms/toolchains
+build:macos --config=unix
+build:linux --config=unix
+# build:windows --config=msvc
+
+# Compilation mode configs (optional)
+build:debug --compilation_mode=dbg
+build:release --compilation_mode=opt

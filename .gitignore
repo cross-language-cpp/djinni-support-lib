@@ -5,3 +5,6 @@ build/*
 cmake-build-debug/
 check_install_root/
 .vscode/
+
+# Bazel
+/bazel-*

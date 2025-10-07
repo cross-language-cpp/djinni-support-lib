@@ -1,0 +1,11 @@
+""" doc string """
+
+module(
+    name = "djinni-support-lib",
+    version = "1.0.0",
+)
+
+# IMPORTANT: apple_support must come before rules_cc to take precedence
+bazel_dep(name = "apple_support", version = "1.23.1")
+bazel_dep(name = "rules_apple", version = "4.2.0", repo_name = "build_bazel_rules_apple")
+bazel_dep(name = "rules_cc", version = "0.2.9")
