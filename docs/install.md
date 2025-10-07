@@ -13,7 +13,7 @@ project(foo)
 set(DJINNI_BUILD_TESTING OFF CACHE INTERNAL "")
 # choose for which target language the djinni-support-lib should be compiled.
 # At least one of the following options must be set to true:
-# DJINNI_WITH_JNI, DJINNI_WITH_OBJC, DJINNI_WITH_PYTHON, DJINNI_WITH_CPPCLI
+# DJINNI_WITH_JNI, DJINNI_WITH_OBJC
 # In this example the target language depends on the target system:
 if(ANDROID)
     set(DJINNI_WITH_JNI ON CACHE INTERNAL "")

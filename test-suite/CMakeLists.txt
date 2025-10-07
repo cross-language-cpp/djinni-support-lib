@@ -40,7 +40,6 @@ add_djinni_target(DjinniAllTests
   JNI_OUT_FILES     JNI_GENERATED_SRCS
   OBJC_OUT_FILES    OBJC_GENERATED_SRCS
   OBJCPP_OUT_FILES  OBJCPP_GENERATED_SRCS
-  CPPCLI_OUT_FILES  CPPCLI_GENERATED_SRCS
   YAML_OUT_FILE     YAML_GENERATED_SRCS
 )
 
@@ -74,7 +73,6 @@ add_djinni_target(DjinniWCharTests
   JNI_OUT_FILES     WCHAR_JNI_GENERATED_SRCS
   OBJC_OUT_FILES    WCHAR_OBJC_GENERATED_SRCS
   OBJCPP_OUT_FILES  WCHAR_OBJCPP_GENERATED_SRCS
-  CPPCLI_OUT_FILES  WCHAR_CPPCLI_GENERATED_SRCS
   YAML_OUT_FILE     WCHAR_YAML_GENERATED_SRCS
 )
 
@@ -83,8 +81,6 @@ file(GLOB_RECURSE CPP_HANDWRITTEN_SRCS "handwritten-src/cpp/*")
 file(GLOB_RECURSE JAVA_TEST_SRCS "handwritten-src/java/*")
 file(GLOB_RECURSE OBJC_HANDWRITTEN_SRCS "handwritten-src/objc/impl/*")
 file(GLOB_RECURSE OBJC_TEST_SRCS "handwritten-src/objc/tests/*")
-file(GLOB_RECURSE C_WRAPPER_HANDWRITTEN_SRCS "handwritten-src/cwrapper/*")
-file(GLOB_RECURSE PYCPP_HANDWRITTEN_SRCS "handwritten-src/pycpp/*")
 
 source_group("handwritten-cpp"  FILES ${CPP_HANDWRITTEN_SRCS})
 source_group("handwritten-objc" FILES ${OBJC_HANDWRITTEN_SRCS})
@@ -182,105 +178,4 @@ if(DJINNI_WITH_OBJC)
 endif()
 
 
-if(DJINNI_WITH_PYTHON)
-  # There's no YAML support in Djinni for Python yet.
-  set(FILTERED_CPP_HANDWRITTEN_SRCS ${CPP_HANDWRITTEN_SRCS})
-  list(REMOVE_ITEM FILTERED_CPP_HANDWRITTEN_SRCS
-    "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/TranslateDuration.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/flag_roundtrip.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp/wchar_test_helpers.cpp"
-  )
 
-  add_library(mylib SHARED
-    ${FILTERED_CPP_HANDWRITTEN_SRCS}
-    ${C_WRAPPER_HANDWRITTEN_SRCS}
-    ${PYCPP_HANDWRITTEN_SRCS}
-    ${C_WRAPPER_GENERATED_SRCS}
-    ${PYCPP_GENERATED_SRCS}
-  )
-  target_include_directories(mylib PUBLIC
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/pycpp
-    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/pycpp
-  )
-  target_link_libraries(mylib PUBLIC djinni-support-lib::djinni-support-lib)
-
-  # Prepare Python 3 environment
-  find_package(PythonInterp "3" REQUIRED)
-  if (WIN32)
-    message(WARNING "Python support on Windwos is not fully implemented, for more details visit https://github.com/cross-language-cpp/djinni-support-lib/issues")
-    string(JOIN $<SEMICOLON> PYTHONPATH
-    "${CMAKE_SOURCE_DIR}/djinni/py"
-    "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
-    $ENV{PYTHONPATH})
-  else()
-    string(JOIN ":" PYTHONPATH
-      "${CMAKE_SOURCE_DIR}/djinni/py"
-      "${CMAKE_CURRENT_BINARY_DIR}/generated-src/python"
-      $ENV{PYTHONPATH})
-  endif()
-
-  # Compile Python extension module (CFFI)
-  set(C_WRAPPER_GENERATED_HEADERS ${C_WRAPPER_GENERATED_SRCS})
-  list(FILTER C_WRAPPER_GENERATED_HEADERS INCLUDE REGEX "\\.h$")
-  add_custom_target(PyCFFIlib_cffi ALL
-    ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} LIBRARY_PATH=$<TARGET_FILE_DIR:mylib> ${PYTHON_EXECUTABLE}
-        ${PYCFFI_GENERATED_SRCS}
-        ${CMAKE_SOURCE_DIR}/djinni/cwrapper/wrapper_marshal.h
-        ${C_WRAPPER_GENERATED_HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cwrapper/limits_helper.h
-    DEPENDS mylib ${PYCFFI_GENERATED_SRCS} ${PYTHON_GENERATED_SRCS} ${C_WRAPPER_GENERATED_HEADERS}
-    COMMENT "Building CFFI lib"
-    VERBATIM
-    WORKING_DIRECTORY $<TARGET_FILE_DIR:mylib>
-  )
-
-  add_test(NAME PythonTests COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
-    ${PYTHON_EXECUTABLE} -m pytest -s "${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/python"
-  )
-endif()
-
-if(DJINNI_WITH_CPPCLI)
-  add_library(DjinniCppCli SHARED
-    ${CPP_HANDWRITTEN_SRCS}
-    ${CPP_GENERATED_SRCS}
-    ${CPPCLI_GENERATED_SRCS}
-    ${WCHAR_CPP_GENERATED_SRCS}
-    ${WCHAR_CPPCLI_GENERATED_SRCS}
-  )
-  target_include_directories(DjinniCppCli PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src/cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/handwritten-src
-    ${CMAKE_CURRENT_BINARY_DIR}/generated-src/cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/generated-src
-  )
-  set_target_properties(DjinniCppCli PROPERTIES
-    VS_DOTNET_REFERENCES "System;System.Core"
-    COMMON_LANGUAGE_RUNTIME ""
-  )
-  target_link_libraries(DjinniCppCli PUBLIC djinni-support-lib::djinni-support-lib)
-
-  add_library(DjinniCppCliTest SHARED
-    handwritten-src/cs/ClientInterfaceImpl.cs
-    handwritten-src/cs/ClientInterfaceTest.cs
-    handwritten-src/cs/CppExceptionTest.cs
-    handwritten-src/cs/DurationTest.cs
-    handwritten-src/cs/EnumTest.cs
-    handwritten-src/cs/MapRecordTest.cs
-    handwritten-src/cs/MockRecordTest.cs
-    handwritten-src/cs/NestedCollectionTest.cs
-    handwritten-src/cs/PrimitiveListTest.cs
-    handwritten-src/cs/PrimitivesTest.cs
-    handwritten-src/cs/RecordWithDerivingsTest.cs
-    handwritten-src/cs/SetRecordTest.cs
-    handwritten-src/cs/TokenTest.cs
-    handwritten-src/cs/WcharTest.cs
-  )
-  set_target_properties(DjinniCppCliTest PROPERTIES
-    VS_DOTNET_REFERENCES "System;System.Core"
-    VS_PACKAGE_REFERENCES "nunit_3.13.1;NUnit3TestAdapter_3.17.0;Microsoft.NET.Test.Sdk_16.9.4"
-  )
-
-  target_link_libraries(DjinniCppCliTest PUBLIC DjinniCppCli)
-endif()

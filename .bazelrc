@@ -1,0 +1,71 @@
+# Bazel configuration for djinni-support-lib
+
+# Import common configs
+import %workspace%/.bazelrc.common
+
+# Build optimizations
+build --compilation_mode=opt
+build --copt=-O2
+build --copt=-DNDEBUG
+
+# C++ Configuration
+build --cxxopt=-std=c++17
+build --host_cxxopt=-std=c++17
+build --copt=-Wall
+build --copt=-Wextra
+build --copt=-Werror
+
+# Platform-specific configurations
+build:linux --copt=-fPIC
+build:linux --linkopt=-ldl
+
+build:macos --copt=-fPIC
+build:macos --linkopt=-framework Foundation
+build:macos --apple_platform_type=macos
+
+build:ios --apple_platform_type=ios
+build:ios --copt=-fobjc-arc
+build:ios --linkopt=-framework Foundation
+
+build:windows --copt=/std:c++17
+build:windows --host_copt=/std:c++17
+
+# JNI Configuration
+build --define=with_jni=true
+
+# Objective-C Configuration (when building on macOS/iOS)
+build:objc --copt=-fobjc-arc
+build:objc --copt=-x
+build:objc --copt=objective-c++
+
+# Python Configuration
+build:python --define=with_python=true
+
+# C++/CLI Configuration (Windows only)
+build:cppcli --define=with_cppcli=true
+build:cppcli --copt=/clr
+
+# Test Configuration
+test --test_output=errors
+test --test_summary=detailed
+test --test_verbose_timeout_warnings
+
+# Coverage
+coverage --combined_report=lcov
+coverage --coverage_report_generator=@bazel_tools//tools/test:coverage_report_generator
+
+# Debug Configuration
+build:debug --compilation_mode=dbg
+build:debug --copt=-g
+build:debug --strip=never
+build:debug --linkopt=-g
+
+# Fast build (for development)
+build:fastbuild --compilation_mode=fastbuild
+
+# Remote execution (if using remote build execution)
+build:remote --remote_executor=...
+build:remote --remote_cache=...
+
+# Try to import user-specific .bazelrc.user file if it exists
+try-import %workspace%/.bazelrc.user
