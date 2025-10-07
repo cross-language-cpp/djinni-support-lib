@@ -1,0 +1,58 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "objc_library")
+
+# Base library - internal use only, contains shared C++ headers
+cc_library(
+    name = "djinni-base",
+    hdrs = [
+        "djinni/djinni_common.hpp",
+        "djinni/proxy_cache_impl.hpp",
+        "djinni/proxy_cache_interface.hpp",
+    ],
+    copts = ["-std=c++17"],
+    strip_include_prefix = ".",
+    visibility = ["//visibility:private"],
+)
+
+# JNI library - public API
+cc_library(
+    name = "djinni-jni",
+    srcs = [
+        "djinni/jni/djinni_jni_main.cpp",
+        "djinni/jni/djinni_support.cpp",
+    ],
+    hdrs = [
+        "djinni/jni/Marshal.hpp",
+        "djinni/jni/djinni_jni_main.hpp",
+        "djinni/jni/djinni_support.hpp",
+    ],
+    linkstatic = True,
+    strip_include_prefix = ".",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":djinni-base",
+        "@bazel_tools//tools/jdk:jni",
+    ],
+    alwayslink = True,
+)
+
+# Objective-C library - public API
+objc_library(
+    name = "djinni-objc",
+    srcs = [
+        "djinni/objc/DJICppWrapperCache+Private.h",
+        "djinni/objc/DJIError.mm",
+        "djinni/objc/DJIMarshal+Private.h",
+        "djinni/objc/DJIObjcWrapperCache+Private.h",
+        "djinni/objc/DJIProxyCaches.mm",
+    ],
+    hdrs = [
+        "djinni/objc/DJIError.h",
+    ],
+    copts = [
+        "-ObjC++",
+        "-fobjc-arc",
+    ],
+    sdk_frameworks = ["Foundation"],
+    visibility = ["//visibility:public"],
+    deps = [":djinni-base"],
+)
