@@ -1,9 +1,7 @@
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 if(DJINNI_WITH_OBJC)
   set(PROJECT_LANGUAGES OBJC OBJCXX)
-elseif(DJINNI_WITH_CPPCLI)
-  set(PROJECT_LANGUAGES CSharp)
 endif()
 
 project(djinni_support_lib CXX ${PROJECT_LANGUAGES})
@@ -30,22 +28,6 @@ set(SRC_OBJC
   "djinni/objc/DJIObjcWrapperCache+Private.h"
   "djinni/objc/DJIError.mm"
   "djinni/objc/DJIProxyCaches.mm"
-)
-
-set(SRC_C_WRAPPER
-  "djinni/cwrapper/wrapper_marshal.cpp"
-  "djinni/cwrapper/wrapper_marshal.h"
-  "djinni/cwrapper/wrapper_marshal.hpp"
-)
-
-set(SRC_CPPCLI
-  "djinni/cppcli/Assert.hpp"
-  "djinni/cppcli/AutoPtr.hpp"
-  "djinni/cppcli/Error.hpp"
-  "djinni/cppcli/Error.cpp"
-  "djinni/cppcli/Marshal.hpp"
-  "djinni/cppcli/WrapperCache.hpp"
-  "djinni/cppcli/WrapperCache.cpp"
 )
 
 # set `DJINNI_LIBRARY_TYPE` to `STATIC` or `SHARED` to define the type of library.
@@ -133,55 +115,8 @@ if(DJINNI_WITH_JNI)
   endif()
 endif()
 
-# Python support
-option(DJINNI_WITH_PYTHON "Include the Python support code in Djinni support library." OFF)
-if(DJINNI_WITH_PYTHON)
-  set_target_properties(djinni_support_lib PROPERTIES
-    POSITION_INDEPENDENT_CODE ON)
-  target_sources(djinni_support_lib PRIVATE ${SRC_C_WRAPPER})
-  source_group("cwrapper" FILES ${SRC_C_WRAPPER})
-  # these files might be delivered in future per default
-  install(
-    FILES
-      "djinni/cwrapper/wrapper_marshal.h"
-      "djinni/cwrapper/wrapper_marshal.hpp"
-    DESTINATION
-      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cwrapper
-    )
-endif()
-
-option(DJINNI_WITH_CPPCLI "Include the C++/CLI support code in Djinni support library." OFF)
-if(DJINNI_WITH_CPPCLI)
-
-  if(NOT MSVC)
-    message(FATAL_ERROR "Enabling DJINNI_WITH_CPPCLI without MSVC is not supported")
-  endif()
-
-  if(DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON)
-    message(FATAL_ERROR "DJINNI_WITH_CPPCLI can not be used with other bindings enabled.")
-  endif()
-
-  target_sources(djinni_support_lib PRIVATE ${SRC_CPPCLI})
-  source_group("cppcli" FILES ${SRC_CPPCLI})
-  set_target_properties(djinni_support_lib PROPERTIES
-    VS_DOTNET_REFERENCES "System;System.Core"
-    COMMON_LANGUAGE_RUNTIME ""
-  )
-
-  install(
-    FILES
-      "djinni/cppcli/Assert.hpp"
-      "djinni/cppcli/AutoPtr.hpp"
-      "djinni/cppcli/Error.hpp"
-      "djinni/cppcli/Marshal.hpp"
-      "djinni/cppcli/WrapperCache.hpp"
-    DESTINATION
-      ${CMAKE_INSTALL_INCLUDEDIR}/djinni/cppcli
-  )
-endif()
-
-if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI OR DJINNI_WITH_PYTHON OR DJINNI_WITH_CPPCLI))
-  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI or DJINNI_WITH_PYTHON or DJINNI_WITH_CPPCLI must be enabled.")
+if(NOT (DJINNI_WITH_OBJC OR DJINNI_WITH_JNI))
+  message(FATAL_ERROR "At least one of DJINNI_WITH_OBJC or DJINNI_WITH_JNI must be enabled.")
 endif()
 
 option(DJINNI_BUILD_TESTING "Build tests" ON)
